@@ -54,5 +54,6 @@ _build
 .kateproject*
 .spyder*
 .ipynb_checkpoints
+.idea
 
 temp
