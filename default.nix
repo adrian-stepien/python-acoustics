@@ -11,6 +11,7 @@
 , pandas
 , six
 , tabulate
+, soundfile
 , glibcLocales
 , pylint
 , yapf
@@ -57,7 +58,7 @@ in buildPythonPackage rec {
   nativeBuildInputs = [
     flit-core
   ] ++ lib.optionals development [ sphinx pylint yapf ];
-  propagatedBuildInputs = [ numpy scipy matplotlib pandas six tabulate ];
+  propagatedBuildInputs = [ numpy scipy matplotlib pandas six tabulate soundfile];
 
   nativeCheckInputs = [
     pytest
