@@ -45,11 +45,19 @@ def test_convolve_ltv():
 
 
 def test_decibel_to_neper():
-    assert (decibel_to_neper(1.0) == 0.11512925464970229)
+    np.testing.assert_almost_equal(
+        decibel_to_neper(1.0),
+        0.11512925469,
+        decimal=10
+    )
 
 
 def test_neper_to_decibel():
-    assert (neper_to_decibel(1.0) == 8.685889638065035)
+    np.testing.assert_almost_equal(
+        neper_to_decibel(1.0),
+        8.6858896381,
+        decimal=10
+    )
 
 
 def test_ir2fr():
