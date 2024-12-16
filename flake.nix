@@ -13,6 +13,7 @@
     interpreters-to-test = [
       "python39"
       "python310"
+      "python311"
       "python3"
     ];
 
