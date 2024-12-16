@@ -21,10 +21,17 @@ def mean_alpha(alphas, surfaces):
     Calculate mean of absorption coefficients.
 
     :param alphas: Absorption coefficients :math:`\\alpha`.
+        Expected to be a 1D or 2D array.
     :param surfaces: Surfaces :math:`S`.
+        Expected to be a 1D array with the same length as the first dimension of alphas.
+    :returns: Weighted average of absorption coefficients.
     """
-    return np.average(alphas, axis=0, weights=surfaces)
+    # Convert inputs to NumPy arrays to ensure compatibility
+    alphas = np.atleast_1d(alphas)
+    surfaces = np.atleast_1d(surfaces)
 
+    # Calculate weighted average
+    return np.average(alphas, axis=0, weights=surfaces)
 
 def nrc(alphas):
     """
