@@ -55,5 +55,8 @@ _build
 .spyder*
 .ipynb_checkpoints
 .idea
+.DS_Store
+.pytest_cache/
+.venv/
 
 temp

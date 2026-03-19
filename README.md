@@ -1,6 +1,6 @@
 # python-acoustics
 
-[![Build Status](https://travis-ci.org/python-acoustics/python-acoustics.svg?branch=master)](https://travis-ci.org/python-acoustics/python-acoustics)
+[![Tests](https://github.com/adrian-stepien/python-acoustics/actions/workflows/test.yml/badge.svg)](https://github.com/adrian-stepien/python-acoustics/actions/workflows/test.yml)
 
 The `python-acoustics` module is a Python module with useful tools for acousticians.
 
@@ -22,7 +22,7 @@ The test suite can be run with
 
 ## Documentation
 
-Documentation can be found [online](http://python-acoustics.github.io/python-acoustics/).
+Documentation sources live in the `docs` folder in this repository.
 
 ## License
 
