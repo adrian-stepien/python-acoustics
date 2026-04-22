@@ -1,17 +1,31 @@
-DOCS=docs
+DOCS = docs
 
-.PHONY: docs tests
+.PHONY: sync test tests lint format format-check docs build sdist clean release
 
-FORMAT_FILES=acoustics $(DOCS)/conf.py
+sync:
+	uv sync --all-groups
+
+test:
+	uv run pytest
+
+tests: test
+
+lint:
+	uv run ruff check .
+
+format:
+	uv run ruff format .
+
+format-check:
+	uv run ruff format --check .
 
 docs:
-	cd $(DOCS) && $(MAKE) clean && $(MAKE) html
+	uv run sphinx-build -b html $(DOCS) $(DOCS)/_build/html
 
-docs-online: docs
-	ghp-import -np $(DOCS)/_build/html -r origin
+build:
+	uv build
 
-tests:
-	py.test tests
+sdist: build
 
 clean:
 	rm -rf dist
@@ -20,12 +34,7 @@ clean:
 	rm -rf acoustics.egg-info
 	rm -rf build
 	rm -rf .pytest_cache
+	rm -rf $(DOCS)/_build
 
-format:
-	yapf -ipr $(FORMAT_FILES)
-
-sdist:
-	flit build --format sdist
-
-release: docs-online
-	flit publish --format sdist
+release:
+	@echo "Releases are created by pushing a version tag, for example: git tag v0.3.0 && git push origin v0.3.0"
