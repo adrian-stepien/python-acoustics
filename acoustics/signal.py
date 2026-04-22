@@ -1088,43 +1088,46 @@ def instantaneous_frequency(signal, fs, axis=-1):
 
 
 def wvd(signal, fs, analytic=True):
-    """Wigner-Ville Distribution
+    """Wigner-Ville Distribution.
 
     :param signal: Signal
     :param fs: Sample frequency
     :param analytic: Use the analytic signal, calculated using Hilbert transform.
+    :returns: Tuple ``(f, W)`` where ``f`` is the frequency axis (length
+        ``N``, Nyquist ``fs / 4`` when ``analytic`` is True) and ``W`` has
+        shape ``(N, len(signal))`` with rows indexed by ``f`` and columns
+        by time.
 
     .. math:: W_z(n, \\omega) = 2 \\sum_k z^*[n-k]z[n+k] e^{-j\\omega 2kT}
 
-    Includes positive and negative frequencies.
+    The factor ``2kT`` in the exponent halves the effective Nyquist
+    frequency, so for a complex tone at :math:`f_0` the peak appears at
+    bin :math:`f_0`. The returned frequency axis accounts for this.
 
     """
     signal = np.asarray(signal)
 
     N = int(len(signal) + len(signal) % 2)
-    length_FFT = N  # Take an even value of N
-
-    # if N != len(signal):
-    #    signal = np.concatenate(signal, [0])
-
+    length_FFT = N
     length_time = len(signal)
 
     if analytic:
         signal = hilbert(signal)
     s = np.concatenate((np.zeros(length_time), signal, np.zeros(length_time)))
-    W = np.zeros((length_FFT, length_time))
-    tau = np.arange(0, N // 2)
 
-    R = np.zeros((N, length_time), dtype='float64')
+    tau = np.arange(0, N // 2)
+    tau_mirror = np.arange(1, N // 2)
+
+    R = np.zeros((N, length_time), dtype=np.complex128)
 
     i = length_time
     for t in range(length_time):
-        R[t, tau] = s[i + tau] * s[i - tau].conj()  # In one direction
-        R[t, N - (tau + 1)] = R[t, tau + 1].conj()  # And the other direction
+        R[t, tau] = s[i + tau] * s[i - tau].conj()
+        R[t, N - tau_mirror] = R[t, tau_mirror].conj()
         i += 1
     W = np.fft.fft(R, length_FFT) / (2 * length_FFT)
 
-    f = np.fft.fftfreq(N, 1.0 / fs)
+    f = np.fft.fftfreq(N, 2.0 / fs)
     return f, W.T
 
 
