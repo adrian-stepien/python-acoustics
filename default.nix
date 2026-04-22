@@ -1,78 +1,40 @@
-# Nix function for building this package
 { lib
 , buildPythonPackage
-, flit
 , flit-core
-, wheel
 , pytest
 , numpy
 , scipy
 , matplotlib
 , pandas
-, six
 , tabulate
 , soundfile
-, glibcLocales
-, pylint
-, yapf
-, sphinx
-, bootstrapped-pip
-, stdenv
-, python
-, ensureNewerSourcesForZipFilesHook
-, development ? false
+, glibcLocales ? null
 }:
 
-let
-  sdist = stdenv.mkDerivation {
-    name = "acoustics-sdist";
-    src = ./.;
-
-    nativeBuildInputs = [
-      python
-      flit # Use flit front-end here because we don't have a sdist hook
-      wheel
-      # Ensure files are after 1980 so users not using
-      # Nix and buildPythonPackage can built a wheel as well.
-      ensureNewerSourcesForZipFilesHook
-    ];
-
-    buildPhase = ":";
-
-    installPhase = ''
-      flit build --format sdist
-      mkdir -p $out
-      cp dist/* $out/
-    '';
-
-    strictDeps = true;
-  };
-
-in buildPythonPackage rec {
+buildPythonPackage rec {
   pname = "acoustics";
   version = "0.3.0";
   format = "pyproject";
 
-  src = "${sdist}/${pname}*";
+  src = ./.;
 
   nativeBuildInputs = [
     flit-core
-  ] ++ lib.optionals development [ sphinx pylint yapf ];
-  propagatedBuildInputs = [ numpy scipy matplotlib pandas six tabulate soundfile];
-
-  nativeCheckInputs = [
-    pytest
   ];
 
-  meta = {
-    description = "Acoustics module for Python";
-  };
+  propagatedBuildInputs = [ numpy scipy matplotlib pandas tabulate soundfile ];
+
+  nativeCheckInputs = [ pytest ] ++ lib.optional (glibcLocales != null) glibcLocales;
 
   checkPhase = ''
-    pushd tests
-    LC_ALL="en_US.UTF-8" pytest .
-    popd
+    LC_ALL="en_US.UTF-8" pytest tests
   '';
 
-  passthru.sdist = sdist;
+  pythonImportsCheck = [ "acoustics" ];
+
+  meta = with lib; {
+    description = "Acoustics tools for Python";
+    homepage = "https://github.com/adrian-stepien/python-acoustics";
+    license = licenses.bsd3;
+  };
 }
