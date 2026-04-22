@@ -34,8 +34,12 @@ The main checks are:
 ```bash
 uv run ruff check .
 uv run ruff format --check .
+uv run basedpyright
 uv run pytest
 ```
+
+Pytest writes terminal coverage and `coverage.xml` by default. For a local HTML
+coverage report, run `make coverage`.
 
 ## Documentation
 

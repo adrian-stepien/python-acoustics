@@ -23,6 +23,7 @@ jobs:
       - run: uv sync --locked --all-groups
       - run: uv run ruff check .
       - run: uv run ruff format --check .
+      - run: uv run basedpyright
       - run: uv run pytest -q
       - run: uv build
       - name: Create or update GitHub Release

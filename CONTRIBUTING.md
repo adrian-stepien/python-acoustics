@@ -18,6 +18,7 @@ Useful commands:
 uv run pytest
 uv run ruff check .
 uv run ruff format --check .
+uv run basedpyright
 uv run sphinx-build -b html docs docs/_build/html
 uv build
 ```
@@ -29,9 +30,13 @@ make sync
 make test
 make lint
 make format-check
+make typecheck
 make docs
 make build
 ```
+
+Pytest reports coverage in the terminal and writes `coverage.xml` by default.
+Use `make coverage` when you want a local HTML report.
 
 ## Nix
 

@@ -6,8 +6,7 @@ Bands
 
 import numpy as np
 
-# from acoustics.decibel import dbsum
-import acoustics
+from acoustics.decibel import dbsum
 from acoustics.standards.iec_61672_1_2013 import (
     NOMINAL_OCTAVE_CENTER_FREQUENCIES,
     NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES,
@@ -41,7 +40,9 @@ def octave(first, last):
     # low = np.where(octave_bands == first)[0]
     # high = np.where(octave_bands == last)[0]
     # return octave_bands[low: high+1]
-    return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=1).nominal
+    from acoustics.signal import OctaveBand
+
+    return OctaveBand(fstart=first, fstop=last, fraction=1).nominal
 
 
 def octave_low(first, last):
@@ -77,7 +78,9 @@ def third(first, last):
     # low = np.where(third_oct_bands == first)[0]
     # high = np.where(third_oct_bands == last)[0]
     # return third_oct_bands[low: high+1]
-    return acoustics.signal.OctaveBand(fstart=first, fstop=last, fraction=3).nominal
+    from acoustics.signal import OctaveBand
+
+    return OctaveBand(fstart=first, fstop=last, fraction=3).nominal
 
 
 def third_low(first, last):
@@ -116,7 +119,7 @@ def third2oct(levels, axis=None):
     shape[axis] = shape[axis] // 3
     shape.insert(axis + 1, 3)
     levels = np.reshape(levels, shape)
-    return np.squeeze(acoustics.decibel.dbsum(levels, axis=axis + 1))
+    return np.squeeze(dbsum(levels, axis=axis + 1))
 
 
 def _check_band_type(freqs):
