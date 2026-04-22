@@ -19,7 +19,7 @@ uv run pytest
 uv run ruff check .
 uv run ruff format --check .
 uv run basedpyright
-uv run sphinx-build -b html docs docs/_build/html
+uv run sphinx-build -W --keep-going -b html docs docs/_build/html
 uv build
 ```
 

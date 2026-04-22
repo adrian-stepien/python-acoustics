@@ -29,7 +29,7 @@ typecheck:
 	uv run basedpyright
 
 docs:
-	uv run sphinx-build -b html $(DOCS) $(DOCS)/_build/html
+	uv run sphinx-build -W --keep-going -b html $(DOCS) $(DOCS)/_build/html
 
 build:
 	uv build

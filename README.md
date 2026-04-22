@@ -47,7 +47,7 @@ coverage report, run `make coverage`.
 Documentation sources live in the `docs` folder. Build them locally with:
 
 ```bash
-uv run sphinx-build -b html docs docs/_build/html
+make docs
 ```
 
 ## Nix
