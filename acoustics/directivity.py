@@ -10,6 +10,7 @@ The following conventions are used within this module:
 * The azimuth angle :math:`\\phi` has a range :math:`[0 , 2 \\pi]`.
 
 """
+
 import abc
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
@@ -37,7 +38,7 @@ def figure_eight(theta, phi=0.0):
     :param theta: angle :math:`\\theta`
     """
     del phi
-    #return spherical_harmonic(theta, phi, m=0, n=1)
+    # return spherical_harmonic(theta, phi, m=0, n=1)
     return np.abs(np.cos(theta))
 
 
@@ -176,18 +177,15 @@ class Cardioid(Directivity):
 
 
 class FigureEight(Directivity):
-    """Directivity of a figure of eight.
-    """
+    """Directivity of a figure of eight."""
 
     def _directivity(self, theta, phi):
-        """Directivity
-        """
+        """Directivity"""
         return figure_eight(theta, phi)
 
 
 class SphericalHarmonic(Directivity):
-    """Directivity of a spherical harmonic of degree `n` and order `m`.
-    """
+    """Directivity of a spherical harmonic of degree `n` and order `m`."""
 
     def __init__(self, rotation=None, m=None, n=None):
 
@@ -200,8 +198,7 @@ class SphericalHarmonic(Directivity):
         """
 
     def _directivity(self, theta, phi):
-        """Directivity
-        """
+        """Directivity"""
         return spherical_harmonic(theta, phi, self.m, self.n)
 
 
@@ -258,11 +255,11 @@ def plot(d, sphere=False):
 
     else:
         x, y, z = spherical_to_cartesian(np.abs(dr), theta, phi)
-    #R, theta, phi = cartesian_to_spherical(x, y, z)
+    # R, theta, phi = cartesian_to_spherical(x, y, z)
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    #p = ax.plot_surface(x, y, z, cmap=plt.cm.jet, rstride=1, cstride=1, linewidth=0)
+    # p = ax.plot_surface(x, y, z, cmap=plt.cm.jet, rstride=1, cstride=1, linewidth=0)
 
     norm = Normalize()
     norm.autoscale(dr)

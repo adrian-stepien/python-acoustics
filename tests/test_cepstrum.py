@@ -1,11 +1,11 @@
 import numpy as np
 
-#from scipy.signal import (complex_cepstrum, inverse_complex_cepstrum,
+# from scipy.signal import (complex_cepstrum, inverse_complex_cepstrum,
 #                          real_cepstrum, minimum_phase, sawtooth)
 from scipy.signal import sawtooth
 from acoustics.cepstrum import *
 
-from numpy.testing import (assert_array_almost_equal)
+from numpy.testing import assert_array_almost_equal
 
 
 def test_complex_cepstrum():
@@ -17,9 +17,9 @@ def test_complex_cepstrum():
     samples = int(fs * duration)
     t = np.arange(samples) / fs
     fundamental = 100.0
-    signal = sawtooth(2. * np.pi * fundamental * t)
+    signal = sawtooth(2.0 * np.pi * fundamental * t)
     ceps, _ = complex_cepstrum(signal)
-    assert (fundamental == 1.0 / t[ceps.argmax()])
+    assert fundamental == 1.0 / t[ceps.argmax()]
 
 
 def test_inverse_complex_cepstrum():

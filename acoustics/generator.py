@@ -55,6 +55,7 @@ For related functions, check :mod:`scipy.signal`.
 
 
 """
+
 import itertools
 import numpy as np
 
@@ -110,16 +111,16 @@ def pink(N, state=None):
 
     """
     # This method uses the filter with the following coefficients.
-    #b = np.array([0.049922035, -0.095993537, 0.050612699, -0.004408786])
-    #a = np.array([1, -2.494956002, 2.017265875, -0.522189400])
-    #return lfilter(B, A, np.random.randn(N))
+    # b = np.array([0.049922035, -0.095993537, 0.050612699, -0.004408786])
+    # a = np.array([1, -2.494956002, 2.017265875, -0.522189400])
+    # return lfilter(B, A, np.random.randn(N))
     # Another way would be using the FFT
-    #x = np.random.randn(N)
-    #X = rfft(x) / N
+    # x = np.random.randn(N)
+    # X = rfft(x) / N
     state = np.random.RandomState() if state is None else state
     uneven = N % 2
     X = state.randn(N // 2 + 1 + uneven) + 1j * state.randn(N // 2 + 1 + uneven)
-    S = np.sqrt(np.arange(len(X)) + 1.)  # +1 to avoid divide by zero
+    S = np.sqrt(np.arange(len(X)) + 1.0)  # +1 to avoid divide by zero
     y = (irfft(X / S)).real
     if uneven:
         y = y[:-1]
@@ -163,7 +164,7 @@ def brown(N, state=None):
     state = np.random.RandomState() if state is None else state
     uneven = N % 2
     X = state.randn(N // 2 + 1 + uneven) + 1j * state.randn(N // 2 + 1 + uneven)
-    S = (np.arange(len(X)) + 1)  # Filter
+    S = np.arange(len(X)) + 1  # Filter
     y = (irfft(X / S)).real
     if uneven:
         y = y[:-1]
@@ -185,7 +186,7 @@ def violet(N, state=None):
     state = np.random.RandomState() if state is None else state
     uneven = N % 2
     X = state.randn(N // 2 + 1 + uneven) + 1j * state.randn(N // 2 + 1 + uneven)
-    S = (np.arange(len(X)))  # Filter
+    S = np.arange(len(X))  # Filter
     y = (irfft(X * S)).real
     if uneven:
         y = y[:-1]
@@ -210,7 +211,7 @@ def noise_generator(N=44100, color='white', state=None):
     Generate `N` amount of unique samples and cycle over these samples.
 
     """
-    #yield from itertools.cycle(noise(N, color)) # Python 3.3
+    # yield from itertools.cycle(noise(N, color)) # Python 3.3
     for sample in itertools.cycle(noise(N, color, state)):
         yield sample
 

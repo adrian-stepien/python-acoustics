@@ -7,10 +7,10 @@ import itertools as it
 from acoustics.signal import EqualBand
 import matplotlib.pyplot as plt
 
-#def test_operator():
+# def test_operator():
 
-    #n = 10000
-    #fs = 5000
+# n = 10000
+# fs = 5000
 
 
 def test_wav():
@@ -34,8 +34,7 @@ def test_wav():
         assert signal.channels == channels
 
 
-class TestSignal():
-
+class TestSignal:
     # (channels, samples, sample rate)
     @pytest.fixture(params=[(1, 88200, 22050), (3, 88200, 22050), (3, 88200, 44100)])
     def signal(self, request):
@@ -81,7 +80,7 @@ class TestSignal():
     def test_decimate(self, signal):
         factor = 4
         decimated = signal.decimate(factor)
-        assert (signal.fs / factor == decimated.fs)
+        assert signal.fs / factor == decimated.fs
 
     def test_upsample(self, signal):
 
@@ -116,9 +115,9 @@ class TestSignal():
         signal = signal[..., 0:100]
         if signal.channels > 1:  # Multichannel is not supported
             with pytest.raises(ValueError):
-                assert ((signal.correlate() == signal.correlate(signal)).all())
+                assert (signal.correlate() == signal.correlate(signal)).all()
         else:
-            assert ((signal.correlate() == signal.correlate(signal)).all())
+            assert (signal.correlate() == signal.correlate(signal)).all()
 
     def test_amplitude_envelope(self, signal):
         x = signal.amplitude_envelope()
@@ -173,11 +172,11 @@ class TestSignal():
 
     def test_leq(self, signal):
 
-        #s = Signal(np.random.randn(10000), 22050)
+        # s = Signal(np.random.randn(10000), 22050)
 
         leq = signal.leq()
 
-        assert (type(leq) is np.ndarray)
+        assert type(leq) is np.ndarray
 
     def test_bandpass(self, signal):
         x = signal.bandpass(1000.0, 2000.0)
@@ -195,7 +194,7 @@ class TestSignal():
         x = signal.octavepass(1000.0, fraction=6)
 
     def test_bandpass_frequencies(self, signal):
-        f = EqualBand(center=[100., 200., 300.], bandwidth=20.)
+        f = EqualBand(center=[100.0, 200.0, 300.0], bandwidth=20.0)
         f, x = signal.bandpass_frequencies(f)
 
     def test_bandpass_octaves(self, signal):
@@ -213,40 +212,39 @@ class TestSignal():
         s = signal.weigh('A', zero_phase=True)
 
     ## Plot methods with arguments to test.
-    #plot_methods = {'plot'                      : None,
-                    #'plot_levels'               :   {
-                        #'time'                  : [None, 0.125, 1.0],
-                        #'method'                : ['average', 'weighting'],
-                        #},
-                    #'plot_octaves'              : None,
-                    #'plot_third_octaves'        : None,
-                    #'plot_fractional_octaves'   : {
-                        #'fraction'              : [3, 6]
-                        #},
-                    #'plot_spectrum'             : {
-                        #'N'                     : [None, 8000]
-                        #},
-                    #}
+    # plot_methods = {'plot'                      : None,
+    #'plot_levels'               :   {
+    #'time'                  : [None, 0.125, 1.0],
+    #'method'                : ['average', 'weighting'],
+    # },
+    #'plot_octaves'              : None,
+    #'plot_third_octaves'        : None,
+    #'plot_fractional_octaves'   : {
+    #'fraction'              : [3, 6]
+    # },
+    #'plot_spectrum'             : {
+    #'N'                     : [None, 8000]
+    # },
+    # }
 
-    #@pytest.yield_fixture
-    #def plot_function_with_argument(self):
-        ## This won't work with pytest. Apparently they do teardown after the yield
-        ## statement and therefore don't support multiple yield statements.
-        ## Using a closure doesn't help either.
-        #for func, arguments in self.plot_methods.items():
-            #if arguments is not None:
-                #for prod in it.product(*arguments.values()):
-                    #yield (func, dict(zip(arguments.keys(), prod)))
-            #else:
-                #yield (func, None)
+    # @pytest.yield_fixture
+    # def plot_function_with_argument(self):
+    ## This won't work with pytest. Apparently they do teardown after the yield
+    ## statement and therefore don't support multiple yield statements.
+    ## Using a closure doesn't help either.
+    # for func, arguments in self.plot_methods.items():
+    # if arguments is not None:
+    # for prod in it.product(*arguments.values()):
+    # yield (func, dict(zip(arguments.keys(), prod)))
+    # else:
+    # yield (func, None)
 
-    #def test_plot_functions(self, signal, plot_function_with_argument):
-        #func, arguments = plot_function_with_argument
-        #if arguments is None:
-            #getattr(signal, func)()
-        #else:
-            #getattr(signal, func)(**arguments)
-
+    # def test_plot_functions(self, signal, plot_function_with_argument):
+    # func, arguments = plot_function_with_argument
+    # if arguments is None:
+    # getattr(signal, func)()
+    # else:
+    # getattr(signal, func)(**arguments)
 
     def test_plot(self, signal):
         signal.plot()
@@ -300,6 +298,6 @@ class TestSignal():
         p = pickle.dumps(signal)
         obj = pickle.loads(p)
 
-        assert ((obj == signal).all())
-        assert (obj.fs == signal.fs)
-        assert (type(obj) is type(signal))
+        assert (obj == signal).all()
+        assert obj.fs == signal.fs
+        assert type(obj) is type(signal)

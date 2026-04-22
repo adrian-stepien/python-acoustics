@@ -37,6 +37,7 @@ Other descriptors
 *****************
 
 """
+
 import numpy as np
 
 from acoustics.standards.iso_tr_25417_2007 import (
@@ -66,7 +67,7 @@ from acoustics.standards.iso_1996_1_2003 import composite_rating_level
 
 def _leq(levels, time):
     levels = np.asarray(levels)
-    return 10.0 * np.log10((1.0 / time) * np.sum(10.0**(levels / 10.0)))
+    return 10.0 * np.log10((1.0 / time) * np.sum(10.0 ** (levels / 10.0)))
 
 
 def leq(levels, int_time=1.0):

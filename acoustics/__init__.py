@@ -5,6 +5,7 @@ Acoustics
 The acoustics module.
 
 """
+
 import acoustics.aio
 import acoustics.ambisonics
 import acoustics.atmosphere
@@ -24,7 +25,8 @@ import acoustics.quantity
 import acoustics.reflection
 import acoustics.room
 import acoustics.signal
-#import acoustics.utils
+
+# import acoustics.utils
 import acoustics.weighting
 
 from acoustics._signal import Signal

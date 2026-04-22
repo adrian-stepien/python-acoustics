@@ -10,6 +10,7 @@ Plotting functions using matplotlib_ library.
 .. _matplotlib: http://matplotlib.org/
 
 """
+
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -25,6 +26,7 @@ class OctaveBandScale(mscale.ScaleBase):
     """
     Octave band scale.
     """
+
     name = 'octave'
 
     def __init__(self, axis, **kwargs):
@@ -62,6 +64,7 @@ class ThirdBandScale(mscale.ScaleBase):
     """
     Third-octave band scale.
     """
+
     name = 'third'
 
     def __init__(self, axis, **kwargs):
@@ -96,16 +99,16 @@ mscale.register_scale(ThirdBandScale)
 
 
 def plot_octave(
-        data,
-        octaves,
-        axes=None,
-        kHz=False,
-        xlabel=None,
-        ylabel=None,
-        title=None,
-        separator=None,
-        *args,
-        **kwargs,
+    data,
+    octaves,
+    axes=None,
+    kHz=False,
+    xlabel=None,
+    ylabel=None,
+    title=None,
+    separator=None,
+    *args,
+    **kwargs,
 ):
     """
     Plot octave bands from `data` levels and `octaves` bands.
@@ -131,7 +134,7 @@ def plot_octave(
     """
     band_type = 'octave'
     k_ticks = kHz
-    return (plot_bands(
+    return plot_bands(
         data,
         octaves,
         axes,
@@ -143,20 +146,20 @@ def plot_octave(
         separator,
         *args,
         **kwargs,
-    ))
+    )
 
 
 def plot_third(
-        data,
-        thirds,
-        axes=None,
-        kHz=False,
-        xlabel=None,
-        ylabel=None,
-        title=None,
-        separator=None,
-        *args,
-        **kwargs,
+    data,
+    thirds,
+    axes=None,
+    kHz=False,
+    xlabel=None,
+    ylabel=None,
+    title=None,
+    separator=None,
+    *args,
+    **kwargs,
 ):
     """
     Plot third octave bands from `data` levels and `thirds` bands.
@@ -182,7 +185,7 @@ def plot_third(
     """
     band_type = 'third'
     k_ticks = kHz
-    return (plot_bands(
+    return plot_bands(
         data,
         thirds,
         axes,
@@ -194,21 +197,21 @@ def plot_third(
         separator,
         *args,
         **kwargs,
-    ))
+    )
 
 
 def plot_bands(
-        data,
-        bands,
-        axes,
-        band_type,
-        k_ticks=False,
-        xlabel=None,
-        ylabel=None,
-        title=None,
-        separator=None,
-        *args,
-        **kwargs,
+    data,
+    bands,
+    axes,
+    band_type,
+    k_ticks=False,
+    xlabel=None,
+    ylabel=None,
+    title=None,
+    separator=None,
+    *args,
+    **kwargs,
 ):
     """
     Plot bands from `data` levels and `bands`.
@@ -271,18 +274,78 @@ Octave center frequencies as strings. Uses kHz notation.
 """
 
 TICKS_THIRD_OCTAVE = [
-    '12.5', '16', '20', '25', '31.5', '40', '50', '63', '80', '100', '125', '160', '200', '250', '315', '400', '500',
-    '630', '800', '1000', '1250', '1600', '2000', '2500', '3150', '4000', '5000', '6300', '8000', '10000', '12500',
-    '16000', '20000'
+    '12.5',
+    '16',
+    '20',
+    '25',
+    '31.5',
+    '40',
+    '50',
+    '63',
+    '80',
+    '100',
+    '125',
+    '160',
+    '200',
+    '250',
+    '315',
+    '400',
+    '500',
+    '630',
+    '800',
+    '1000',
+    '1250',
+    '1600',
+    '2000',
+    '2500',
+    '3150',
+    '4000',
+    '5000',
+    '6300',
+    '8000',
+    '10000',
+    '12500',
+    '16000',
+    '20000',
 ]
 """
 Third-octave center frequencies as strings.
 """
 
 TICKS_THIRD_OCTAVE_KHZ = [
-    '12.5', '16', '20', '25', '31.5', '40', '50', '63', '80', '100', '125', '160', '200', '250', '315', '400', '500',
-    '630', '800', '1000', '1250', '1600', '2000', '2500', '3150', '4000', '5000', '6300', '8000', '10000', '12500',
-    '16000', '20000'
+    '12.5',
+    '16',
+    '20',
+    '25',
+    '31.5',
+    '40',
+    '50',
+    '63',
+    '80',
+    '100',
+    '125',
+    '160',
+    '200',
+    '250',
+    '315',
+    '400',
+    '500',
+    '630',
+    '800',
+    '1000',
+    '1250',
+    '1600',
+    '2000',
+    '2500',
+    '3150',
+    '4000',
+    '5000',
+    '6300',
+    '8000',
+    '10000',
+    '12500',
+    '16000',
+    '20000',
 ]
 """
 Third-octave center frequencies as strings. Uses kHz notation.
@@ -295,6 +358,7 @@ def _get_ticklabels(band_type, kHz, separator):
     """
     if separator is None:
         import locale
+
         separator = locale.localeconv()['decimal_point']
 
     if band_type == 'octave':

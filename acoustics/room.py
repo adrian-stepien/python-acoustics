@@ -4,6 +4,7 @@ Room
 
 The room acoustics module contains several functions to calculate the reverberation time in spaces.
 """
+
 import numpy as np
 
 from scipy.io import wavfile
@@ -11,7 +12,7 @@ from scipy import stats
 
 from acoustics.utils import _is_1d
 from acoustics.signal import bandpass
-from acoustics.bands import (_check_band_type, octave_low, octave_high, third_low, third_high)
+from acoustics.bands import _check_band_type, octave_low, octave_high, third_low, third_high
 
 SOUNDSPEED = 343.0
 
@@ -32,6 +33,7 @@ def mean_alpha(alphas, surfaces):
 
     # Calculate weighted average
     return np.average(alphas, axis=0, weights=surfaces)
+
 
 def nrc(alphas):
     """
@@ -155,7 +157,7 @@ def t60_arau(Sx, Sy, Sz, alpha, volume, c=SOUNDSPEED):
     a_y = -np.log(1 - alpha[1])
     a_z = -np.log(1 - alpha[2])
     St = np.sum(np.array([Sx, Sy, Sz]))
-    A = St * a_x**(Sx / St) * a_y**(Sy / St) * a_z**(Sz / St)
+    A = St * a_x ** (Sx / St) * a_y ** (Sy / St) * a_z ** (Sz / St)
     t60 = 4.0 * np.log(10.0**6.0) * volume / (c * A)
     return t60
 
@@ -206,7 +208,7 @@ def t60_impulse(file_name, bands, rt='t30'):  # pylint: disable=too-many-locals
         abs_signal = np.abs(filtered_signal) / np.max(np.abs(filtered_signal))
 
         # Schroeder integration
-        sch = np.cumsum(abs_signal[::-1]**2)[::-1]
+        sch = np.cumsum(abs_signal[::-1] ** 2)[::-1]
         sch_db = 10.0 * np.log10(sch / np.max(sch))
 
         # Linear regression
@@ -215,7 +217,7 @@ def t60_impulse(file_name, bands, rt='t30'):  # pylint: disable=too-many-locals
         init_sample = np.where(sch_db == sch_init)[0][0]
         end_sample = np.where(sch_db == sch_end)[0][0]
         x = np.arange(init_sample, end_sample + 1) / fs
-        y = sch_db[init_sample:end_sample + 1]
+        y = sch_db[init_sample : end_sample + 1]
         slope, intercept = stats.linregress(x, y)[0:2]
 
         # Reverberation time (T30, T20, T10 or EDT)

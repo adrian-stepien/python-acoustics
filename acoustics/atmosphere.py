@@ -32,6 +32,7 @@ Functions
 .. autofunction:: acoustics.standards.iso_9613_1_1993.attenuation_coefficient
 
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -54,13 +55,13 @@ class Atmosphere:
     """Triple point isotherm temperature."""
 
     def __init__(
-            self,
-            temperature=REFERENCE_TEMPERATURE,
-            pressure=REFERENCE_PRESSURE,
-            relative_humidity=0.0,
-            reference_temperature=REFERENCE_TEMPERATURE,
-            reference_pressure=REFERENCE_PRESSURE,
-            triple_temperature=TRIPLE_TEMPERATURE,
+        self,
+        temperature=REFERENCE_TEMPERATURE,
+        pressure=REFERENCE_PRESSURE,
+        relative_humidity=0.0,
+        reference_temperature=REFERENCE_TEMPERATURE,
+        reference_pressure=REFERENCE_PRESSURE,
+        triple_temperature=TRIPLE_TEMPERATURE,
     ):
         """
 
@@ -267,7 +268,7 @@ def frequency_response(atmosphere, distance, frequencies, inverse=False):
     :param inverse: Whether the attenuation should be undone.
     """
     sign = +1 if inverse else -1
-    tf = 10.0**(float(sign) * distance * atmosphere.attenuation_coefficient(frequencies) / 20.0)
+    tf = 10.0 ** (float(sign) * distance * atmosphere.attenuation_coefficient(frequencies) / 20.0)
     return tf
 
 
@@ -292,18 +293,28 @@ def impulse_response(atmosphere, distance, fs, ntaps, inverse=False):
     real, even frequency response.
     """
     # Frequencies vector with positive frequencies only.
-    frequencies = np.fft.rfftfreq(ntaps, 1. / fs)
+    frequencies = np.fft.rfftfreq(ntaps, 1.0 / fs)
     # Single-sided spectrum. Negative frequencies have the same values.
     tf = frequency_response(atmosphere, distance, frequencies, inverse)
     # Impulse response. We design a zero-phase filter (linear-phase with zero slope).
     # We need to shift the IR to make it even. Taking the real part should not be necessary, see above.
-    #ir = np.fft.ifftshift(np.fft.irfft(tf, n=ntaps)).real
+    # ir = np.fft.ifftshift(np.fft.irfft(tf, n=ntaps)).real
     ir = acoustics.signal.impulse_response_real_even(tf, ntaps=ntaps)
     return ir
 
 
 __all__ = [
-    'Atmosphere', 'SOUNDSPEED', 'REFERENCE_TEMPERATURE', 'REFERENCE_TEMPERATURE', 'TRIPLE_TEMPERATURE', 'soundspeed',
-    'saturation_pressure', 'molar_concentration_water_vapour', 'relaxation_frequency_oxygen',
-    'relaxation_frequency_nitrogen', 'attenuation_coefficient', 'impulse_response', 'frequency_response'
+    'Atmosphere',
+    'SOUNDSPEED',
+    'REFERENCE_TEMPERATURE',
+    'REFERENCE_TEMPERATURE',
+    'TRIPLE_TEMPERATURE',
+    'soundspeed',
+    'saturation_pressure',
+    'molar_concentration_water_vapour',
+    'relaxation_frequency_oxygen',
+    'relaxation_frequency_nitrogen',
+    'attenuation_coefficient',
+    'impulse_response',
+    'frequency_response',
 ]

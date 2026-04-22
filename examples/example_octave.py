@@ -7,7 +7,6 @@ import numpy as np
 
 
 def main():
-
     """We happen to have the following frequency vector."""
     f = np.logspace(2, 4, 100)
 
@@ -47,6 +46,7 @@ def main():
     o = Octave(fmin=100.0, fmax=20000, fraction=6)
 
     print(o.center)
+
 
 if __name__ == '__main__':
     main()

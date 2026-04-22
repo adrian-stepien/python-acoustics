@@ -4,10 +4,11 @@ from acoustics.generator import noise
 from acoustics.signal import octaves
 
 
-class Test_noise():
+class Test_noise:
     """
     Test :func:`acoustics.generator.noise`.
     """
+
     CASES = [
         ('white', +3.0, 0.0),
         ('pink', 0.0, -3.0),
@@ -59,18 +60,18 @@ class Test_noise():
 
     def test_length(self, color, samples, state):
 
-        assert (len(noise(samples, color, state=state)) == samples)
+        assert len(noise(samples, color, state=state)) == samples
 
     def test_power(self, color, samples, power_change, state):
 
         fs = 48000
         _, L = octaves(noise(samples, color, state=state), fs)
         change = np.diff(L).mean()
-        assert (np.abs(change - power_change) < self.ERROR)
+        assert np.abs(change - power_change) < self.ERROR
 
     def test_power_density(self, color, samples, power_density_change, state):
 
         fs = 48000
         _, L = octaves(noise(samples, color, state=state), fs, density=True)
         change = np.diff(L).mean()
-        assert (np.abs(change - power_density_change) < self.ERROR)
+        assert np.abs(change - power_density_change) < self.ERROR
