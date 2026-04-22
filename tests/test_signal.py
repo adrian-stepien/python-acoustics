@@ -279,6 +279,59 @@ def ob(fraction):
     return OctaveBand(fstart=10.0, fstop=1000, fraction=fraction)
 
 
+class TestWvd:
+    """Tests for :func:`acoustics.signal.wvd`."""
+
+    def test_tone_peak_tracks_frequency(self):
+        """A complex tone's WVD should peak at its frequency at every time."""
+        fs = 1000.0
+        duration = 1.0
+        t = np.arange(0, duration, 1 / fs)
+        f0 = 100.0
+        z = np.exp(2j * np.pi * f0 * t)
+
+        f, W = wvd(z, fs, analytic=False)
+
+        # Ignore the zero-padded edges of the autocorrelation.
+        interior = slice(len(t) // 4, 3 * len(t) // 4)
+        peaks = f[np.argmax(np.abs(W[:, interior]), axis=0)]
+        np.testing.assert_allclose(peaks, f0, atol=fs / len(t))
+
+    def test_chirp_peak_tracks_instantaneous_frequency(self):
+        """Peak frequency of a linear chirp's WVD tracks f(t) = f0 + a*t."""
+        fs = 1000.0
+        duration = 1.0
+        t = np.arange(0, duration, 1 / fs)
+        f0, f1 = 50.0, 200.0
+        rate = (f1 - f0) / duration
+        x = np.cos(2 * np.pi * (f0 * t + 0.5 * rate * t**2))
+
+        f, W = wvd(x, fs, analytic=True)
+
+        interior = (t > 0.1) & (t < 0.9)
+        instantaneous = f0 + rate * t
+        peaks = f[np.argmax(np.abs(W[:, interior]), axis=0)]
+        rms_error = np.sqrt(np.mean((peaks - instantaneous[interior]) ** 2))
+        # Bin spacing is fs / (2 * N) ≈ 0.5 Hz; allow a few bins of tolerance.
+        assert rms_error < 2.0
+
+    def test_frequency_axis_is_quarter_nyquist(self):
+        """Analytic WVD Nyquist is fs/4 because of the 2kT factor in the kernel."""
+        fs = 2000.0
+        x = np.zeros(128)
+        f, _ = wvd(x, fs)
+        assert f.max() == pytest.approx(fs / 4.0, rel=0, abs=fs / (2 * len(x)))
+        assert f.min() == pytest.approx(-fs / 4.0, rel=0, abs=fs / (2 * len(x)))
+
+    def test_output_is_real(self):
+        """The Wigner-Ville distribution is mathematically real-valued."""
+        fs = 500.0
+        t = np.arange(0, 0.5, 1 / fs)
+        x = np.cos(2 * np.pi * 80 * t)
+        _, W = wvd(x, fs)
+        np.testing.assert_allclose(W.imag, 0, atol=1e-10)
+
+
 class TestOctaveBand:
     def test_unique(self, ob):
         """Test whether we don't have duplicate values."""
