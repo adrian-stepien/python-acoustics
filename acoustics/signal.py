@@ -754,7 +754,10 @@ def bandpass_frequencies(x, fs, frequencies, order=8, purge=False, zero_phase=Fa
     if purge:
         frequencies = frequencies[frequencies.upper < fs / 2.0]
     return frequencies, np.array(
-        [bandpass(x, band.lower, band.upper, fs, order, zero_phase=zero_phase) for band in frequencies]
+        [
+            bandpass(x, lower, upper, fs, order, zero_phase=zero_phase)
+            for lower, upper in zip(frequencies.lower, frequencies.upper)
+        ]
     )
 
 
