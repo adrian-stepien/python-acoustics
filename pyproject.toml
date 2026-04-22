@@ -44,6 +44,7 @@ file = "LICENSE"
 [dependency-groups]
 test = [
     "pytest >= 8.0",
+    "pytest-cov >= 5.0",
 ]
 lint = [
     "ruff >= 0.4",
@@ -69,7 +70,27 @@ norecursedirs = [
     "build",
     ".eggs",
     ".tox",
+    ".venv",
+    ".claude",
 ]
+addopts = [
+    "--cov=acoustics",
+    "--cov-report=term-missing",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["acoustics"]
+
+[tool.coverage.report]
+exclude_also = [
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "\\.\\.\\.",
+]
+show_missing = true
+skip_covered = false
 
 [tool.ruff]
 line-length = 120
