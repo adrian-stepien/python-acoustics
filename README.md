@@ -38,7 +38,8 @@ uv run basedpyright
 uv run pytest
 ```
 
-Pytest writes terminal coverage and `coverage.xml` by default. For a local HTML
+Pytest writes terminal coverage and `coverage.xml` by default. CI also uploads
+downloadable HTML coverage reports for each Python version. For a local HTML
 coverage report, run `make coverage`.
 
 ## Documentation

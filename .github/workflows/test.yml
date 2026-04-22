@@ -58,11 +58,15 @@ jobs:
           enable-cache: true
           cache-dependency-glob: uv.lock
       - run: uv sync --locked --group test
-      - run: uv run pytest -q
+      - run: uv run pytest -q --cov-report=html
       - uses: actions/upload-artifact@v7
         with:
           name: coverage-python-${{ matrix.python-version }}
           path: coverage.xml
+      - uses: actions/upload-artifact@v7
+        with:
+          name: coverage-html-python-${{ matrix.python-version }}
+          path: htmlcov/
 
   smoke:
     runs-on: ${{ matrix.os }}

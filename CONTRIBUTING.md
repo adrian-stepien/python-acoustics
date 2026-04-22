@@ -36,7 +36,8 @@ make build
 ```
 
 Pytest reports coverage in the terminal and writes `coverage.xml` by default.
-Use `make coverage` when you want a local HTML report.
+CI also uploads downloadable HTML coverage reports for each Python version. Use
+`make coverage` when you want a local HTML report.
 
 ## Nix
 
