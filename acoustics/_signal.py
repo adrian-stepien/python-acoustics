@@ -17,7 +17,7 @@ from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE, sound_pres
 class Signal(np.ndarray):
     """A signal consisting of samples (array) and a sample frequency (float)."""
 
-    def __new__(cls, data, fs):
+    def __new__(cls, data: np.ndarray | list | tuple, fs: float) -> "Signal":
         obj = np.asarray(data).view(cls)
         obj.fs = fs
         return obj
