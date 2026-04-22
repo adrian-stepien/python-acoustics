@@ -75,10 +75,9 @@ def stc_curve(tl):
         diff = tl - top_curve
         residuals = np.clip(diff, np.min(diff), 0)
         res_sum = np.sum(residuals)
-        if res_sum < -32:
-            if np.any(residuals > -8):
-                top_curve -= 1
-                break
+        if res_sum < -32 and np.any(residuals > -8):
+            top_curve -= 1
+            break
         top_curve += 1
     return top_curve
 

@@ -33,8 +33,8 @@ Functions
 
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 import acoustics
 from acoustics.standards.iso_9613_1_1993 import *  # pylint: disable=wildcard-import
@@ -98,7 +98,7 @@ class Atmosphere:
         """
 
     def __repr__(self):
-        return "Atmosphere{}".format(self.__str__())
+        return f"Atmosphere{self.__str__()}"
 
     def __str__(self):
         attributes = [
@@ -109,7 +109,7 @@ class Atmosphere:
             "reference_pressure",
             "triple_temperature",
         ]
-        return "({})".format(", ".join(map(lambda attr: "{}={}".format(attr, getattr(self, attr)), attributes)))
+        return "({})".format(", ".join(map(lambda attr: f"{attr}={getattr(self, attr)}", attributes)))
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ == other.__class__

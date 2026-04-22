@@ -57,6 +57,7 @@ For related functions, check :mod:`scipy.signal`.
 """
 
 import itertools
+
 import numpy as np
 
 try:
@@ -78,8 +79,8 @@ def noise(N, color='white', state=None):
     """
     try:
         return _noise_generators[color](N, state)
-    except KeyError:
-        raise ValueError("Incorrect color.")
+    except KeyError as err:
+        raise ValueError("Incorrect color.") from err
 
 
 def white(N, state=None):
@@ -212,8 +213,7 @@ def noise_generator(N=44100, color='white', state=None):
 
     """
     # yield from itertools.cycle(noise(N, color)) # Python 3.3
-    for sample in itertools.cycle(noise(N, color, state)):
-        yield sample
+    yield from itertools.cycle(noise(N, color, state))
 
 
 def heaviside(N):

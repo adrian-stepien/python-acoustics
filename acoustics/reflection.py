@@ -5,8 +5,8 @@ Reflection
 The reflection module contains functions for calculating reflection factors and impedances.
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy.special import erfc  # pylint: disable=no-name-in-module
 
 SPECIFIC_HEAT_RATIO = 1.4

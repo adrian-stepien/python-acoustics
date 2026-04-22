@@ -2,10 +2,7 @@
 Signal
 ======
 
-The signal module constains all kinds of signal processing related functions.
-
-.. inheritance-diagram:: acoustics.signal
-
+The signal module contains all kinds of signal processing related functions.
 
 Filtering
 *********
@@ -79,19 +76,17 @@ Other
 
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.signal import butter, cheby1, filtfilt, firwin, freqz, hilbert, lfilter, lti, sosfilt
 from scipy.sparse import spdiags
-from scipy.signal import butter, lfilter, freqz, filtfilt, sosfilt
 
-import acoustics.octave
 # from acoustics.octave import REFERENCE
-
 import acoustics.bands
-from scipy.signal import hilbert
-from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
+import acoustics.octave
 from acoustics.standards.iec_61672_1_2013 import (
     NOMINAL_OCTAVE_CENTER_FREQUENCIES,
     NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES,
 )
+from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
 
 try:
     from pyfftw.interfaces.numpy_fft import rfft
@@ -282,7 +277,6 @@ def convolve(signal, ltv, mode='full'):
         stop = len(signal) + ltv.shape[0] / 2 - 1 + ltv.shape[0] % 2
         return out[start:stop]
     elif mode == 'valid':
-        length = len(signal) - ltv.shape[0]
         start = ltv.shape[0] - 1
         stop = len(signal)
         return out[start:stop]
@@ -387,7 +381,7 @@ class Frequencies:
         return str(self.center)
 
     def __repr__(self):
-        return "Frequencies({})".format(str(self.center))
+        return f"Frequencies({str(self.center)})"
 
     def angular(self):
         """Angular center frequency in radians per second."""
@@ -442,13 +436,13 @@ class EqualBand(Frequencies):
         upper = fstart + np.arange(0, nbands) * bandwidth + bandwidth / 2.0
         lower = fstart + np.arange(0, nbands) * bandwidth - bandwidth / 2.0
 
-        super(EqualBand, self).__init__(center, lower, upper, bandwidth)
+        super().__init__(center, lower, upper, bandwidth)
 
     def __getitem__(self, key):
         return type(self)(center=self.center[key], bandwidth=self.bandwidth)
 
     def __repr__(self):
-        return "EqualBand({})".format(str(self.center))
+        return f"EqualBand({str(self.center)})"
 
 
 class OctaveBand(Frequencies):
@@ -484,7 +478,7 @@ class OctaveBand(Frequencies):
         bandwidth = upper - lower
         nominal = acoustics.octave.nominal_center_frequency(None, fraction, indices)
 
-        super(OctaveBand, self).__init__(center, lower, upper, bandwidth)
+        super().__init__(center, lower, upper, bandwidth)
 
         self.fraction = fraction
         """Fraction of fractional-octave filter.
@@ -502,7 +496,7 @@ class OctaveBand(Frequencies):
         return type(self)(center=self.center[key], fraction=self.fraction, reference=self.reference)
 
     def __repr__(self):
-        return "OctaveBand({})".format(str(self.center))
+        return f"OctaveBand({str(self.center)})"
 
 
 def ms(x):
@@ -536,10 +530,7 @@ def normalize(y, x=None):
     #The mean power of a Gaussian with :math:`\\mu=0` and :math:`\\sigma=1` is 1.
     """
     # return y * np.sqrt( (np.abs(x)**2.0).mean() / (np.abs(y)**2.0).mean() )
-    if x is not None:
-        x = ms(x)
-    else:
-        x = 1.0
+    x = ms(x) if x is not None else 1.0
     return y * np.sqrt(x / ms(y))
     # return y * np.sqrt( 1.0 / (np.abs(y)**2.0).mean() )
 
@@ -756,7 +747,7 @@ def bandpass_frequencies(x, fs, frequencies, order=8, purge=False, zero_phase=Fa
     return frequencies, np.array(
         [
             bandpass(x, lower, upper, fs, order, zero_phase=zero_phase)
-            for lower, upper in zip(frequencies.lower, frequencies.upper)
+            for lower, upper in zip(frequencies.lower, frequencies.upper, strict=False)
         ]
     )
 
@@ -941,7 +932,7 @@ class Filterbank:
         fs = self.sample_frequency
         return (
             bandpass_filter(lower, upper, fs, order=self.order, output='sos')
-            for lower, upper in zip(self.frequencies.lower, self.frequencies.upper)
+            for lower, upper in zip(self.frequencies.lower, self.frequencies.upper, strict=False)
         )
 
         # order = self.order
@@ -971,7 +962,9 @@ class Filterbank:
         Power per band in signal.
         """
         filtered = self.filtfilt(signal)
-        return np.array([(x**2.0).sum() / len(x) / bw for x, bw in zip(filtered, self.frequencies.bandwidth)])
+        return np.array(
+            [(x**2.0).sum() / len(x) / bw for x, bw in zip(filtered, self.frequencies.bandwidth, strict=False)]
+        )
 
     def plot_response(self):
         """
@@ -984,7 +977,7 @@ class Filterbank:
         fig = plt.figure()
         ax1 = fig.add_subplot(211)
         ax2 = fig.add_subplot(212)
-        for f, fc in zip(self.filters, self.frequencies.center):
+        for f, fc in zip(self.filters, self.frequencies.center, strict=False):
             w, h = freqz(f[0], f[1], int(fs / 2))  # np.arange(fs/2.0))
             ax1.semilogx(w / (2.0 * np.pi) * fs, 20.0 * np.log10(np.abs(h)), label=str(int(fc)))
             ax2.semilogx(w / (2.0 * np.pi) * fs, np.angle(h), label=str(int(fc)))
@@ -1126,7 +1119,7 @@ def wvd(signal, fs, analytic=True):
 
     i = length_time
     for t in range(length_time):
-        R[t, tau1] = s[i + tau] * s[i - tau].conj()  # In one direction
+        R[t, tau] = s[i + tau] * s[i - tau].conj()  # In one direction
         R[t, N - (tau + 1)] = R[t, tau + 1].conj()  # And the other direction
         i += 1
     W = np.fft.fft(R, length_FFT) / (2 * length_FFT)
@@ -1140,18 +1133,24 @@ def _sosfiltfilt(sos, x, axis=-1, padtype='odd', padlen=None, method='pad', irle
     Note that broadcasting does not work.
     """
     from scipy.signal import sosfilt_zi
-    from scipy.signal._arraytools import odd_ext, axis_slice, axis_reverse
+
+    # Private SciPy helpers — no public equivalents exist as of SciPy 1.15. If a
+    # future SciPy bump moves or removes these, vendor them in-tree.
+    from scipy.signal._arraytools import (  # noqa: PLC2701
+        axis_reverse,
+        axis_slice,
+        const_ext,
+        even_ext,
+        odd_ext,
+    )
 
     x = np.asarray(x)
 
-    if padlen is None:
-        edge = 0
-    else:
-        edge = padlen
+    edge = 0 if padlen is None else padlen
 
     # x's 'axis' dimension must be bigger than edge.
     if x.shape[axis] <= edge:
-        raise ValueError("The length of the input vector x must be at least padlen, which is %d." % edge)
+        raise ValueError(f"The length of the input vector x must be at least padlen, which is {edge}.")
 
     if padtype is not None and edge > 0:
         # Make an extension of length `edge` at each
@@ -1191,9 +1190,6 @@ def _sosfiltfilt(sos, x, axis=-1, padtype='odd', padlen=None, method='pad', irle
         y = axis_slice(y, start=edge, stop=-edge, axis=axis)
 
     return y
-
-
-from scipy.signal import lti, cheby1, firwin
 
 
 def decimate(x, q, n=None, ftype='iir', axis=-1, zero_phase=False):
@@ -1248,10 +1244,7 @@ def decimate(x, q, n=None, ftype='iir', axis=-1, zero_phase=False):
     else:
         system = ftype
 
-    if zero_phase:
-        y = filtfilt(system.num, system.den, x, axis=axis)
-    else:
-        y = lfilter(system.num, system.den, x, axis=axis)
+    y = filtfilt(system.num, system.den, x, axis=axis) if zero_phase else lfilter(system.num, system.den, x, axis=axis)
 
     sl = [slice(None)] * y.ndim
     sl[axis] = slice(None, None, q)

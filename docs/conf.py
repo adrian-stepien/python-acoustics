@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Acoustics documentation build configuration file, created by
 # sphinx-quickstart on Fri Aug 16 09:40:59 2013.
@@ -11,7 +10,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import os
+import sys
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -274,7 +274,7 @@ def setup(app):
 
 # Create Mock objects for the objects that Sphinx cannot import
 
-import sys
+import sys  # noqa: E402  # intentionally scoped to the mock section below
 
 
 class Mock:

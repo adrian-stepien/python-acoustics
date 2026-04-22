@@ -5,6 +5,7 @@ Utils
 """
 
 import numpy as np
+
 from acoustics.decibel import dbsum
 
 SOUNDSPEED = 343.0

@@ -6,20 +6,20 @@ Module for working with octaves.
 
 The following is an example on how to use :class:`acoustics.octave.Octave`.
 
-.. literalinclude:: ../examples/octave.py
+.. literalinclude:: ../examples/example_octave.py
 
 """
 
 import numpy as np
+
 import acoustics
+from acoustics.standards.iec_61260_1_2014 import REFERENCE_FREQUENCY as REFERENCE
 
 # REFERENCE = 1000.0
 # """
 # Reference frequency.
 # """
-
 from acoustics.standards.iec_61260_1_2014 import index_of_frequency
-from acoustics.standards.iec_61260_1_2014 import REFERENCE_FREQUENCY as REFERENCE
 
 
 def exact_center_frequency(frequency=None, fraction=1, n=None, ref=REFERENCE):

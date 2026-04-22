@@ -1,9 +1,8 @@
 import numpy as np
+import pytest
 from numpy.testing import assert_almost_equal, assert_array_almost_equal
 
-import pytest
-
-from acoustics.building import rw_curve, rw, rw_c, rw_ctr, stc, stc_curve, mass_law
+from acoustics.building import mass_law, rw, rw_c, rw_ctr, rw_curve, stc, stc_curve
 
 
 @pytest.fixture

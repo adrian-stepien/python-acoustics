@@ -1,17 +1,17 @@
 import itertools
+
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.pyplot as plt
 import soundfile as sf
-from scipy.signal import detrend, lfilter, bilinear, spectrogram, filtfilt, resample, fftconvolve
-import acoustics
+from scipy.signal import bilinear, detrend, fftconvolve, filtfilt, lfilter, resample, spectrogram
 
-from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE, sound_pressure_level
-from acoustics.standards.iec_61672_1_2013 import WEIGHTING_SYSTEMS
+import acoustics
 from acoustics.standards.iec_61672_1_2013 import (
     NOMINAL_OCTAVE_CENTER_FREQUENCIES,
     NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES,
+    WEIGHTING_SYSTEMS,
 )
+from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE, sound_pressure_level
 
 
 class Signal(np.ndarray):
@@ -49,7 +49,7 @@ class Signal(np.ndarray):
 
     def __reduce__(self):
         # Get the parent's __reduce__ tuple
-        pickled_state = super(Signal, self).__reduce__()
+        pickled_state = super().__reduce__()
         # Create our own tuple to pass to __setstate__
         new_state = pickled_state[2] + (self.fs,)
         # Return a tuple that replaces the parent's __setstate__ tuple with our own
@@ -58,10 +58,10 @@ class Signal(np.ndarray):
     def __setstate__(self, state):
         self.fs = state[-1]  # Set the info attribute
         # Call the parent's __setstate__ with the other tuple elements.
-        super(Signal, self).__setstate__(state[0:-1])
+        super().__setstate__(state[0:-1])
 
     def __repr__(self):
-        return "Signal({})".format(str(self))
+        return f"Signal({str(self)})"
 
     def _construct(self, x):
         """Construct signal like x."""
@@ -355,10 +355,7 @@ class Signal(np.ndarray):
         .. seealso:: :func:`acoustics.cepstrum.complex_cepstrum`
 
         """
-        if N is not None:
-            times = np.linspace(0.0, self.duration, N, endpoint=False)
-        else:
-            times = self.times()
+        times = np.linspace(0.0, self.duration, N, endpoint=False) if N is not None else self.times()
         cepstrum, ndelay = acoustics.cepstrum.complex_cepstrum(self, n=N)
         return times, cepstrum, ndelay
 
@@ -371,10 +368,7 @@ class Signal(np.ndarray):
         .. seealso:: :func:`acoustics.cepstrum.real_cepstrum`
 
         """
-        if N is not None:
-            times = np.linspace(0.0, self.duration, N, endpoint=False)
-        else:
-            times = self.times()
+        times = np.linspace(0.0, self.duration, N, endpoint=False) if N is not None else self.times()
         return times, acoustics.cepstrum.real_cepstrum(self, n=N)
 
     def power_spectrum(self, N=None):
@@ -682,10 +676,10 @@ class Signal(np.ndarray):
                 mode='magnitude',
                 scale_by_freq=False,
             )
-        except AttributeError:
+        except AttributeError as err:
             raise NotImplementedError(
                 "Your version of matplotlib is incompatible due to lack of support of the mode keyword argument to matplotlib.mlab.specgram."
-            )
+            ) from err
 
         if params['colorbar']:
             cb = ax0.get_figure().colorbar(mappable=im)
@@ -943,7 +937,7 @@ class Signal(np.ndarray):
 
     def plot_fractional_octaves(self, frequencies=None, fraction=1, order=8, purge=True, zero_phase=False, **kwargs):
         """Plot fractional octaves."""
-        title = '1/{}-Octaves SPL'.format(fraction)
+        title = f'1/{fraction}-Octaves SPL'
 
         params = {
             'xscale': 'log',
@@ -1061,7 +1055,7 @@ class Signal(np.ndarray):
 
         """
         data = self
-        subtype = "PCM_{}".format(depth)
+        subtype = f"PCM_{depth}"
         to_save = data
         sf.write(filename, to_save.T, int(self.fs), format=format, subtype=subtype)
 

@@ -81,8 +81,32 @@ extend-exclude = [
 
 [tool.ruff.lint]
 select = [
-    "E9",
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
 ]
+ignore = [
+    "E501",  # line too long — formatter handles length
+    "E741",  # ambiguous variable names (l, I) — acoustics uses these for physics symbols
+    "B008",  # function call in default argument — used for REFERENCE_* module constants
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "F403",  # star imports are idiomatic in these tests
+    "F405",  # names may come from star imports
+    "F821",  # star imports mask undefined-name detection
+    "F841",  # unused locals in test scratchpads
+    "B018",  # useless expression — tests sometimes evaluate for side effects
+    "E721",  # type() == comparisons are intentional in type tests
+]
+"acoustics/__init__.py" = ["F401"]            # re-exports for the public API
+"acoustics/standards/__init__.py" = ["F401"]  # re-exports submodules
+"acoustics/atmosphere.py" = ["F403", "F405"]  # re-exports ISO 9613-1 symbols
 
 [tool.ruff.format]
 quote-style = "preserve"

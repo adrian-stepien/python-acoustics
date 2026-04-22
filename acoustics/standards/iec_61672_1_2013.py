@@ -33,12 +33,12 @@ Weighting systems
 import io
 import os
 import pkgutil
+
 import numpy as np
 import pandas as pd
-from scipy.signal import zpk2tf
-from scipy.signal import lfilter, bilinear
-from .iso_tr_25417_2007 import REFERENCE_PRESSURE
+from scipy.signal import bilinear, lfilter, zpk2tf
 
+from .iso_tr_25417_2007 import REFERENCE_PRESSURE
 
 WEIGHTING_DATA = pd.read_csv(
     io.BytesIO(pkgutil.get_data('acoustics', os.path.join('data', 'iec_61672_1_2013.csv'))), sep=',', index_col=0

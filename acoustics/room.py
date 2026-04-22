@@ -6,13 +6,12 @@ The room acoustics module contains several functions to calculate the reverberat
 """
 
 import numpy as np
-
-from scipy.io import wavfile
 from scipy import stats
+from scipy.io import wavfile
 
-from acoustics.utils import _is_1d
+from acoustics.bands import _check_band_type, octave_high, octave_low, third_high, third_low
 from acoustics.signal import bandpass
-from acoustics.bands import _check_band_type, octave_low, octave_high, third_low, third_high
+from acoustics.utils import _is_1d
 
 SOUNDSPEED = 343.0
 
@@ -253,7 +252,7 @@ def clarity(time, signal, fs, bands=None):
         filtered_signal = bandpass(signal, low[band], high[band], fs, order=8)
         h2 = filtered_signal**2.0
         t = int((time / 1000.0) * fs + 1)
-        c[band] = 10.0 * np.log10((np.sum(h2[:t]) / np.sum(h2[t:])))
+        c[band] = 10.0 * np.log10(np.sum(h2[:t]) / np.sum(h2[t:]))
     return c
 
 

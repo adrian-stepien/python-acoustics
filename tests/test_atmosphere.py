@@ -1,7 +1,8 @@
-import numpy as np
-from acoustics.atmosphere import Atmosphere
-
 import sys
+
+import numpy as np
+
+from acoustics.atmosphere import Atmosphere
 
 sys.path.append('..')
 from get_data_path import data_path

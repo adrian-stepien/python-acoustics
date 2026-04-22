@@ -31,7 +31,6 @@ Modules
    reflection
    room
    signal
-   turbulence
    utils
    weighting
    quantity

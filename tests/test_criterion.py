@@ -1,9 +1,8 @@
 import numpy as np
+import pytest
 from numpy.testing import assert_array_equal
 
-import pytest
-
-from acoustics.criterion import nc_curve, nc
+from acoustics.criterion import nc, nc_curve
 
 
 @pytest.mark.parametrize(

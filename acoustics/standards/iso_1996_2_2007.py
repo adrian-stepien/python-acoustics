@@ -7,15 +7,17 @@ intended as a basis for assessing environmental noise.
 
 """
 
+import weakref
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.signal import welch
 from scipy.stats import linregress
-import matplotlib.pyplot as plt
+from tabulate import tabulate
+
 from acoustics.decibel import dbsum
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
-import weakref
-from tabulate import tabulate
 
 TONE_WITHIN_PAUSE_CRITERION_DB = 6.0
 """A tone may exist when the level of any line in the noise pause is 6 dB or more about...."""
@@ -41,8 +43,8 @@ def window_correction(window):
     """Correction to be applied to :math:`L_{pt}` due to use of window."""
     try:
         return _WINDOW_CORRECTION[window]
-    except KeyError:
-        raise ValueError("Window correction is not available for specified window.")
+    except KeyError as err:
+        raise ValueError("Window correction is not available for specified window.") from err
 
 
 def critical_band(frequency):
@@ -67,7 +69,7 @@ def critical_band(frequency):
 
 
 def tones_level(tone_levels):
-    """Total sound pressure level of the tones in a critical band given the level of each of the tones.
+    r"""Total sound pressure level of the tones in a critical band given the level of each of the tones.
 
     .. math L_{pt} = 10 \log_{10}{\sum 10^{L_{pti}/10}}
 
@@ -77,7 +79,7 @@ def tones_level(tone_levels):
 
 
 def masking_noise_level(noise_lines, frequency_resolution, effective_analysis_bandwidth):
-    """Masking noise level :math:`L_{pn}`
+    r"""Masking noise level :math:`L_{pn}`
 
     :param noise_lines: Masking noise lines. See :func:`masking_noise_lines`.
     :param frequency_resolution: Frequency resolution :math:`\Delta f`.
@@ -112,7 +114,7 @@ def masking_noise_lines(levels, line_classifier, center, bandwidth, regression_r
 
 
 def tonal_audibility(tones_level, masking_noise_level, center):
-    """Tonal audibility.
+    r"""Tonal audibility.
 
     :param tones_level: Total sound pressure level of the tones in the critical band :math:`L_{pt}.
     :param masking_noise_level: Total sound pressure level of the masking noise in the critical band :math:`L_{pn}.
@@ -186,8 +188,7 @@ class Tonality:
     @property
     def noise_pauses(self):
         """Noise pauses that were determined."""
-        for noise_pause in self._noise_pauses:
-            yield noise_pause
+        yield from self._noise_pauses
 
     @property
     def tones(self):
@@ -230,7 +231,7 @@ class Tonality:
 
     @property
     def effective_analysis_bandwidth(self):
-        """Effective analysis bandwidth.
+        r"""Effective analysis bandwidth.
 
         In the case of the Hanning window
 
@@ -408,24 +409,24 @@ class Tonality:
         """Print overview of results."""
         try:
             cb = self.dominant_tone.critical_band
-        except AttributeError:
-            raise ValueError("Cannot show overview (yet). No tones have been determined.")
+        except AttributeError as err:
+            raise ValueError("Cannot show overview (yet). No tones have been determined.") from err
 
-        tones = [("Tone", "{:4.1f} Hz: {:4.1f} dB".format(tone.center, tone.tone_level)) for tone in self.tones]
+        tones = [("Tone", f"{tone.center:4.1f} Hz: {tone.tone_level:4.1f} dB") for tone in self.tones]
 
         table = [
-            ("Critical band", "{:4.1f} to {:4.1f} Hz".format(cb.start, cb.end)),
-            ("Masking noise level $L_{pn}$", "{:4.1f} dB".format(cb.masking_noise_level)),
-            ("Tonal level $L_{pt}$", "{:4.1f} dB".format(cb.total_tone_level)),
-            ("Dominant tone", "{:4.1f} Hz".format(cb.tone.center)),
+            ("Critical band", f"{cb.start:4.1f} to {cb.end:4.1f} Hz"),
+            ("Masking noise level $L_{pn}$", f"{cb.masking_noise_level:4.1f} dB"),
+            ("Tonal level $L_{pt}$", f"{cb.total_tone_level:4.1f} dB"),
+            ("Dominant tone", f"{cb.tone.center:4.1f} Hz"),
             (
                 "3 dB bandwidth of tone",
-                "{:2.1f}% of {:4.1f}".format(cb.tone.bandwidth_3db / cb.bandwidth * 100.0, cb.bandwidth),
+                f"{cb.tone.bandwidth_3db / cb.bandwidth * 100.0:2.1f}% of {cb.bandwidth:4.1f}",
             ),
-            ("Tonal audibility $L_{ta}$", "{:4.1f} dB".format(cb.tonal_audibility)),
-            ("Adjustment $K_{t}$", "{:4.1f} dB".format(cb.adjustment)),
-            ("Frequency resolution", "{:4.1f} Hz".format(self.frequency_resolution)),
-            ("Effective analysis bandwidth", "{:4.1f} Hz".format(self.effective_analysis_bandwidth)),
+            ("Tonal audibility $L_{ta}$", f"{cb.tonal_audibility:4.1f} dB"),
+            ("Adjustment $K_{t}$", f"{cb.adjustment:4.1f} dB"),
+            ("Frequency resolution", f"{self.frequency_resolution:4.1f} Hz"),
+            ("Effective analysis bandwidth", f"{self.effective_analysis_bandwidth:4.1f} Hz"),
         ]
         table += tones
         return tabulate(table)
@@ -473,10 +474,10 @@ class NoisePause:
         self.tone = tone
 
     def __str__(self):
-        return "(start={},end={})".format(self.start, self.end)
+        return f"(start={self.start},end={self.end})"
 
     def __repr__(self):
-        return "NoisePause{}".format(str(self))
+        return f"NoisePause{str(self)}"
 
     def __iter__(self):
         yield self.start
@@ -507,15 +508,15 @@ class Tone:
         self.critical_band = critical_band
 
     def __str__(self):
-        return "(center={:4.1f}, levels={:4.1f})".format(self.center, self.tone_level)
+        return f"(center={self.center:4.1f}, levels={self.tone_level:4.1f})"
 
     def __repr__(self):
-        return "Tone{}".format(str(self))
+        return f"Tone{str(self)}"
 
     def _repr_html_(self):
         table = [
-            ("Center frequency", "{:4.1f} Hz".format(self.center)),
-            ("Tone level", "{:4.1f} dB".format(self.tone_level)),
+            ("Center frequency", f"{self.center:4.1f} Hz"),
+            ("Tone level", f"{self.tone_level:4.1f} dB"),
         ]
         return tabulate(table, tablefmt='html')
 
@@ -606,27 +607,25 @@ class CriticalBand:
         self.tone = tone
 
     def __str__(self):
-        return "(center={:4.1f}, bandwidth={:4.1f}, tonal_audibility={:4.1f}, adjustment={:4.1f}".format(
-            self.center, self.bandwidth, self.tonal_audibility, self.adjustment
-        )
+        return f"(center={self.center:4.1f}, bandwidth={self.bandwidth:4.1f}, tonal_audibility={self.tonal_audibility:4.1f}, adjustment={self.adjustment:4.1f}"
 
     def __repr__(self):
-        return "CriticalBand{}".format(str(self))
+        return f"CriticalBand{str(self)}"
 
     def _repr_html_(self):
 
         table = [
-            ("Center frequency", "{:4.1f} Hz".format(self.center)),
-            ("Start frequency", "{:4.1f} Hz".format(self.start)),
-            ("End frequency", "{:4.1f} Hz".format(self.end)),
-            ("Bandwidth", "{:4.1f} Hz".format(self.bandwidth)),
-            ("Regression factor", "{:4.1f}".format(self.regression_range_factor)),
-            ("Regression slope", "{:4.1f}".format(self.regression_slope)),
-            ("Regression intercept", "{:4.1f}".format(self.regression_intercept)),
-            ("Masking noise level", "{:4.1f} dB".format(self.masking_noise_level)),
-            ("Total tone level", "{:4.1f} dB".format(self.total_tone_level)),
-            ("Tonal audibility $L_{ta}$", "{:4.1f} dB".format(self.tonal_audibility)),
-            ("Adjustment $K_{t}$", "{:4.1f} dB".format(self.adjustment)),
+            ("Center frequency", f"{self.center:4.1f} Hz"),
+            ("Start frequency", f"{self.start:4.1f} Hz"),
+            ("End frequency", f"{self.end:4.1f} Hz"),
+            ("Bandwidth", f"{self.bandwidth:4.1f} Hz"),
+            ("Regression factor", f"{self.regression_range_factor:4.1f}"),
+            ("Regression slope", f"{self.regression_slope:4.1f}"),
+            ("Regression intercept", f"{self.regression_intercept:4.1f}"),
+            ("Masking noise level", f"{self.masking_noise_level:4.1f} dB"),
+            ("Total tone level", f"{self.total_tone_level:4.1f} dB"),
+            ("Tonal audibility $L_{ta}$", f"{self.tonal_audibility:4.1f} dB"),
+            ("Adjustment $K_{t}$", f"{self.adjustment:4.1f} dB"),
         ]
 
         return tabulate(table, tablefmt='html')
@@ -641,10 +640,9 @@ def _search_noise_pauses(levels, tsc):
     for i in range(2, len(levels) - 2):
         if (levels[i] - levels[i - 1]) >= tsc and (levels[i - 1] - levels[i - 2]) < tsc:
             possible_start = i
-        if (levels[i] - levels[i + 1]) >= tsc and (levels[i + 1] - levels[i + 2]) < tsc:
-            if possible_start:
-                pauses.append((possible_start, i))
-                possible_start = None
+        if (levels[i] - levels[i + 1]) >= tsc and (levels[i + 1] - levels[i + 2]) < tsc and possible_start:
+            pauses.append((possible_start, i))
+            possible_start = None
     return pauses
 
 

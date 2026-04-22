@@ -4,9 +4,6 @@ Quantities and units
 
 The Quantity module provides two classes to work with quantities and units.
 
-
-.. inheritance-diagram:: acoustics.quantity
-
 """
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
@@ -52,7 +49,7 @@ class Unit:
         """
 
     def __repr__(self):
-        return "Unit({})".format(self.name)
+        return f"Unit({self.name})"
 
     def __str__(self):
         return self.name
@@ -96,7 +93,7 @@ class Quantity:
         """
 
     def __repr__(self):
-        return "Quantity({})".format(self.name)
+        return f"Quantity({self.name})"
 
     def __str__(self):
         return self.name
@@ -118,13 +115,13 @@ def get_quantity(name):
     """
     try:
         q = list(quantities[name])
-    except KeyError:
-        raise ValueError("Unknown quantity. Quantity is not yet specified.")
+    except KeyError as err:
+        raise ValueError("Unknown quantity. Quantity is not yet specified.") from err
     try:
-        u = units[name]
-    except KeyError:
-        raise RuntimeError("Unknown unit. Quantity has been specified but unit has not.")
+        unit_args = units[name]
+    except KeyError as err:
+        raise RuntimeError("Unknown unit. Quantity has been specified but unit has not.") from err
 
-    q[1] = Unit(*units[name])
+    q[1] = Unit(*unit_args)
 
     return Quantity(*q)

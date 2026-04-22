@@ -2,8 +2,9 @@
 An example of how to use :class:`acoustics.octave.Octave`.
 """
 
-from acoustics.octave import Octave
 import numpy as np
+
+from acoustics.octave import Octave
 
 
 def main():

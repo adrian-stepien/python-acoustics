@@ -47,7 +47,7 @@ def soundspeed(temperature, reference_temperature=REFERENCE_TEMPERATURE):
 
 
 def saturation_pressure(temperature, reference_pressure=REFERENCE_PRESSURE, triple_temperature=TRIPLE_TEMPERATURE):
-    """
+    r"""
     Saturation vapour pressure :math:`p_{sat}`.
 
     :param temperature: Ambient temperature :math:`T`
@@ -60,7 +60,7 @@ def saturation_pressure(temperature, reference_pressure=REFERENCE_PRESSURE, trip
 
     with exponent :math:`C` given by
 
-    .. math:: C = -6.8346 \cdot \\left( \\frac{T_{01}}{T} \\right)^{1.261}  + 4.6151
+    .. math:: C = -6.8346 \cdot \left( \frac{T_{01}}{T} \right)^{1.261}  + 4.6151
 
     """
     return reference_pressure * 10.0 ** (-6.8346 * (triple_temperature / temperature) ** (1.261) + 4.6151)
@@ -83,7 +83,7 @@ def molar_concentration_water_vapour(relative_humidity, saturation_pressure, pre
 
 
 def relaxation_frequency_oxygen(pressure, h, reference_pressure=REFERENCE_PRESSURE):
-    """
+    r"""
     Relaxation frequency of oxygen :math:`f_{r,O}`.
 
     :param pressure: Ambient pressure :math:`p_a`
@@ -92,7 +92,7 @@ def relaxation_frequency_oxygen(pressure, h, reference_pressure=REFERENCE_PRESSU
 
     The relaxation frequency of oxygen is calculated using
 
-    .. math:: f_{r,O} = \\frac{p_a}{p_r} \\left( 24 + 4.04 \cdot 10^4 h \\frac{0.02 + h}{0.391 + h}  \\right)
+    .. math:: f_{r,O} = \frac{p_a}{p_r} \left( 24 + 4.04 \cdot 10^4 h \frac{0.02 + h}{0.391 + h}  \right)
 
     """
     return pressure / reference_pressure * (24.0 + 4.04 * 10.0**4.0 * h * (0.02 + h) / (0.391 + h))
@@ -101,7 +101,7 @@ def relaxation_frequency_oxygen(pressure, h, reference_pressure=REFERENCE_PRESSU
 def relaxation_frequency_nitrogen(
     pressure, temperature, h, reference_pressure=REFERENCE_PRESSURE, reference_temperature=REFERENCE_TEMPERATURE
 ):
-    """
+    r"""
     Relaxation frequency of nitrogen :math:`f_{r,N}`.
 
     :param pressure: Ambient pressure :math:`p_a`
@@ -112,7 +112,7 @@ def relaxation_frequency_nitrogen(
 
     The relaxation frequency of nitrogen is calculated using
 
-    .. math:: f_{r,N} = \\frac{p_a}{p_r} \\left( \\frac{T}{T_0} \\right)^{-1/2} \cdot \\left( 9 + 280 h \exp{\\left\{ -4.170 \\left[ \\left(\\frac{T}{T_0} \\right)^{-1/3} -1 \\right] \\right\} } \\right)
+    .. math:: f_{r,N} = \frac{p_a}{p_r} \left( \frac{T}{T_0} \right)^{-1/2} \cdot \left( 9 + 280 h \exp{\left\{ -4.170 \left[ \left(\frac{T}{T_0} \right)^{-1/3} -1 \right] \right\} } \right)
 
     """
     return (

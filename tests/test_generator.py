@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+
 from acoustics.generator import noise
 from acoustics.signal import octaves
 
