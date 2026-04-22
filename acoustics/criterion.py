@@ -54,7 +54,7 @@ def nc(levels):
         if nc_test == 70:
             nc_test = '70+'
             break
-    return nc_test  # pylint: disable=undefined-loop-variable
+    return nc_test
 
 
 __all__ = ['NC_CURVES', 'nc_curve', 'nc']

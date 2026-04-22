@@ -161,7 +161,7 @@ def t60_arau(Sx, Sy, Sz, alpha, volume, c=SOUNDSPEED):
     return t60
 
 
-def t60_impulse(file_name, bands, rt='t30'):  # pylint: disable=too-many-locals
+def t60_impulse(file_name, bands, rt='t30'):
     """
     Reverberation time from a WAV impulse response.
 

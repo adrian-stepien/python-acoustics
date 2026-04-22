@@ -63,7 +63,7 @@ import numpy as np
 try:
     from pyfftw.interfaces.numpy_fft import irfft  # Performs much better than numpy's fftpack
 except ImportError:  # Use monkey-patching np.fft perhaps instead?
-    from numpy.fft import irfft  # pylint: disable=ungrouped-imports
+    from numpy.fft import irfft
 
 from .signal import normalize
 

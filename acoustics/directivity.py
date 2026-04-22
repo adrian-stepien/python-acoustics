@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import Normalize
 from scipy.interpolate import RegularGridInterpolator
-from scipy.special import sph_harm_y  # pylint: disable=no-name-in-module
+from scipy.special import sph_harm_y
 
 
 def cardioid(theta, a=1.0, k=1.0):

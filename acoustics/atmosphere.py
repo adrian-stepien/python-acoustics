@@ -37,7 +37,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import acoustics
-from acoustics.standards.iso_9613_1_1993 import *  # pylint: disable=wildcard-import
+from acoustics.standards.iso_9613_1_1993 import *
 
 
 class Atmosphere:
