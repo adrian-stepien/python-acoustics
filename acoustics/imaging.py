@@ -11,13 +11,11 @@ Plotting functions using matplotlib_ library.
 
 """
 
-import numpy as np
-
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import scale as mscale
 from matplotlib import transforms as mtransforms
-from matplotlib.ticker import NullLocator, FixedLocator
-from matplotlib.ticker import ScalarFormatter, NullFormatter
+from matplotlib.ticker import FixedLocator, NullFormatter, NullLocator, ScalarFormatter
 
 from acoustics.bands import octave, third
 
@@ -362,15 +360,9 @@ def _get_ticklabels(band_type, kHz, separator):
         separator = locale.localeconv()['decimal_point']
 
     if band_type == 'octave':
-        if kHz is True:
-            ticklabels = TICKS_OCTAVE_KHZ
-        else:
-            ticklabels = TICKS_OCTAVE
+        ticklabels = TICKS_OCTAVE_KHZ if kHz is True else TICKS_OCTAVE
     else:
-        if kHz is True:
-            ticklabels = TICKS_THIRD_OCTAVE_KHZ
-        else:
-            ticklabels = TICKS_THIRD_OCTAVE
+        ticklabels = TICKS_THIRD_OCTAVE_KHZ if kHz is True else TICKS_THIRD_OCTAVE
 
     ticklabels = _set_separator(ticklabels, separator)
     return ticklabels

@@ -1,11 +1,12 @@
-import numpy as np
-from acoustics import Signal
-import pytest
+import contextlib
 import tempfile
 
-import itertools as it
-from acoustics.signal import EqualBand
 import matplotlib.pyplot as plt
+import numpy as np
+import pytest
+
+from acoustics import Signal
+from acoustics.signal import EqualBand
 
 # def test_operator():
 
@@ -283,10 +284,9 @@ class TestSignal:
             with pytest.raises(ValueError):
                 signal.plot_spectrogram()
         else:
-            try:
+            # easy way to skip mpl 1.3.1 specgram mode issue
+            with contextlib.suppress(NotImplementedError):
                 signal.plot_spectrogram()
-            except NotImplementedError:  # easy way to skip mpl 1.3.1 specgram mode issue
-                pass
         plt.close("all")
 
     def spectrogram(self, signal):

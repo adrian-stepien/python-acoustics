@@ -12,12 +12,12 @@ The following conventions are used within this module:
 """
 
 import abc
+
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
-from matplotlib.colors import Normalize
-from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-from scipy.interpolate import interp2d as interpolate
+from matplotlib.colors import Normalize
+from scipy.interpolate import RegularGridInterpolator
 from scipy.special import sph_harm_y  # pylint: disable=no-name-in-module
 
 
@@ -230,10 +230,13 @@ class Custom(Directivity):
         Custom directivity.
 
         Interpolate the directivity given longitude and latitude vectors.
+        ``self.r`` is expected to have shape ``(len(self.theta), len(self.phi))``.
         """
-        f = interpolate(self.theta, self.phi, self.r)
-
-        return f(theta, phi)
+        rgi = RegularGridInterpolator((self.theta, self.phi), self.r, bounds_error=False, fill_value=None)
+        theta_arr = np.atleast_1d(theta)
+        phi_arr = np.atleast_1d(phi)
+        grid_theta, grid_phi = np.meshgrid(theta_arr, phi_arr, indexing='ij')
+        return rgi((grid_theta, grid_phi))
 
 
 def plot(d, sphere=False):

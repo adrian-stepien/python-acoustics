@@ -2,15 +2,13 @@
 Tests for :func:`acoustics.signal`
 """
 
-from acoustics.signal import convolve as convolveLTV
-from scipy.signal import convolve as convolveLTI
 import numpy as np
-import itertools
+import pytest
+from numpy.testing import assert_array_almost_equal, assert_array_equal
+from scipy.signal import convolve as convolveLTI
 
 from acoustics.signal import *  # decibel_to_neper, neper_to_decibel, ir2fr, zero_crossings
-from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal, assert_approx_equal
-
-import pytest
+from acoustics.signal import convolve as convolveLTV
 
 
 @pytest.mark.parametrize(
@@ -140,7 +138,7 @@ class Test_integrate_bands:
 
         nb = EqualBand(np.arange(100, 900, 200.0))
         x = np.ones(len(nb))
-        ob = OctaveBand(([125.0, 250, 500.0]))
+        ob = OctaveBand([125.0, 250, 500.0])
         y = integrate_bands(x, nb, ob)
         assert_array_equal(y, np.array([1, 1, 2]))
 

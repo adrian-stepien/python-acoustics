@@ -1,9 +1,8 @@
 import numpy as np
-from numpy.testing import assert_array_equal, assert_array_almost_equal
-
 import pytest
+from numpy.testing import assert_array_almost_equal, assert_array_equal
 
-from acoustics.bands import octave, octave_high, octave_low, third, third_low, third_high, third2oct, _check_band_type
+from acoustics.bands import _check_band_type, octave, octave_high, octave_low, third, third2oct, third_high, third_low
 
 
 @pytest.fixture

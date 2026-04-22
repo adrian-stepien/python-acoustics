@@ -9,14 +9,12 @@ the principal aim of harmonizing the terminology used [ISO25417]_.
 
 .. [ISO24517] http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=42915
 
-.. inheritance-diagram:: acoustics.standards.iso_tr_25417_2007
-
 """
 
 import numpy as np
 
 REFERENCE_PRESSURE = 2.0e-5
-"""
+r"""
 Reference value of the sound pressure :math:`p_0` is :math:`2 \cdot 10^{-5}` Pa.
 """
 
@@ -51,7 +49,7 @@ def equivalent_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESS
 
 
 def max_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, axis=-1):
-    """
+    r"""
     Maximum time-averaged sound pressure level :math:`L_{F,max}` in dB.
 
     :param pressure: Instantaneous sound pressure :math:`p`.
@@ -92,8 +90,8 @@ def peak_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, a
 
 
 REFERENCE_SOUND_EXPOSURE = 4.0e-10
-"""
-Reference value of the sound exposure :math:`E_0` is :math:`4 \cdot 10^{-12} \\mathrm{Pa}^2\\mathrm{s}`.
+r"""
+Reference value of the sound exposure :math:`E_0` is :math:`4 \cdot 10^{-12} \mathrm{Pa}^2\mathrm{s}`.
 """
 
 
@@ -176,13 +174,13 @@ def sound_energy_level(energy, reference_energy=REFERENCE_ENERGY):
 
 
 def sound_intensity(pressure, velocity):
-    """
-    Sound intensity :math:`\\mathbf{i}`.
+    r"""
+    Sound intensity :math:`\mathbf{i}`.
 
     :param pressure: Sound pressure :math:`p(t)`.
-    :param velocity: Particle velocity :math:`\\mathbf{u}(t)`.
+    :param velocity: Particle velocity :math:`\mathbf{u}(t)`.
 
-    .. math:: \\mathbf{i} = p(t) \cdot \\mathbf{u}(t)
+    .. math:: \mathbf{i} = p(t) \cdot \mathbf{u}(t)
 
     """
     return pressure * velocity

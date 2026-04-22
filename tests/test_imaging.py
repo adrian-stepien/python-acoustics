@@ -1,12 +1,11 @@
 import numpy as np
-
 import pytest
 
 has_matplotlib = pytest.importorskip("matplotlib")
 
 if has_matplotlib:
     from acoustics.bands import octave, third
-    from acoustics.imaging import plot_octave, plot_third, plot_bands
+    from acoustics.imaging import plot_bands, plot_octave, plot_third
 
 
 def setup_module(imaging):

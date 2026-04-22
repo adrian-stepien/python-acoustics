@@ -1,9 +1,8 @@
-import pytest
-
 import numpy as np
+import pytest
 from numpy.testing import assert_almost_equal, assert_array_almost_equal
 
-from acoustics.descriptors import leq, sel, lw, lden, ldn
+from acoustics.descriptors import lden, ldn, leq, lw, sel
 
 
 @pytest.fixture

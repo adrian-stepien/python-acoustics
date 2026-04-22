@@ -26,8 +26,9 @@ Nominal center frequencies
 
 """
 
-import acoustics
 import numpy as np
+
+import acoustics
 
 NOMINAL_OCTAVE_CENTER_FREQUENCIES = np.array([31.5, 63.0, 125.0, 250.0, 500.0, 1000.0, 2000.0, 4000.0, 8000.0, 16000.0])
 """Nominal octave center frequencies.
@@ -142,7 +143,7 @@ def upper_frequency(center, fraction=1, G=OCTAVE_FREQUENCY_RATIO):
 
 
 def index_of_frequency(frequency, fraction=1, ref=REFERENCE_FREQUENCY, G=OCTAVE_FREQUENCY_RATIO):
-    """Determine the band index `x` from a given frequency.
+    r"""Determine the band index `x` from a given frequency.
 
     :param frequency: Frequencies :math:`f`.
     :param fraction: Bandwidth designator :math:`b`.
@@ -151,7 +152,7 @@ def index_of_frequency(frequency, fraction=1, ref=REFERENCE_FREQUENCY, G=OCTAVE_
 
     The index of the center frequency is given by
 
-    .. math:: x = round{b \\frac{\log{f/f_{ref} }}{\log{G} }}
+    .. math:: x = round{b \frac{\log{f/f_{ref} }}{\log{G} }}
 
     .. note:: This equation is not part of the standard. However, it follows from :func:`exact_center_frequency`.
 
@@ -159,7 +160,7 @@ def index_of_frequency(frequency, fraction=1, ref=REFERENCE_FREQUENCY, G=OCTAVE_
     fraction = np.asarray(fraction)
     uneven = (fraction % 2).astype('bool')
     return (
-        np.round((2.0 * fraction * np.log(frequency / ref) / np.log(G) - 1.0)) / 2.0 * np.logical_not(uneven)
+        np.round(2.0 * fraction * np.log(frequency / ref) / np.log(G) - 1.0) / 2.0 * np.logical_not(uneven)
         + uneven * np.round(fraction * np.log(frequency / ref) / np.log(G)).astype('int16')
     ).astype('int16')
 

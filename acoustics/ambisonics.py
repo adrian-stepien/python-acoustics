@@ -49,10 +49,7 @@ def sn3d(m, n):
 
     d = np.logical_not(m.astype(bool))
     out = np.sqrt(
-        (2.0 - d)
-        / (4.0 * np.pi)
-        * scipy.special.factorial(n - np.abs(m))
-        / scipy.special.factorial.factorial(n + np.abs(m))
+        (2.0 - d) / (4.0 * np.pi) * scipy.special.factorial(n - np.abs(m)) / scipy.special.factorial(n + np.abs(m))
     )
     return out
 

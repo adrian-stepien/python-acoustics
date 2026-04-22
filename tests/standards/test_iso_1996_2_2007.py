@@ -1,8 +1,8 @@
-import pytest
 import numpy as np
-from acoustics.standards.iso_1996_2_2007 import Tonality
+import pytest
+
 from acoustics import Signal
-import collections
+from acoustics.standards.iso_1996_2_2007 import Tonality
 
 
 def test_tonality():

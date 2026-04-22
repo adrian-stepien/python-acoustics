@@ -40,29 +40,28 @@ Other descriptors
 
 import numpy as np
 
+from acoustics.standards.iso_1996_1_2003 import composite_rating_level
 from acoustics.standards.iso_tr_25417_2007 import (
-    REFERENCE_PRESSURE,
-    sound_pressure_level,
-    equivalent_sound_pressure_level,
-    peak_sound_pressure,
-    peak_sound_pressure_level,
-    REFERENCE_SOUND_EXPOSURE,
-    sound_exposure,
-    sound_exposure_level,
-    REFERENCE_POWER,
-    sound_power_level,
-    sound_energy,
     REFERENCE_ENERGY,
-    sound_energy_level,
-    sound_intensity,
-    time_averaged_sound_intensity,
     REFERENCE_INTENSITY,
-    time_averaged_sound_intensity_level,
+    REFERENCE_POWER,
+    REFERENCE_PRESSURE,
+    REFERENCE_SOUND_EXPOSURE,
+    equivalent_sound_pressure_level,
     normal_time_averaged_sound_intensity,
     normal_time_averaged_sound_intensity_level,
+    peak_sound_pressure,
+    peak_sound_pressure_level,
+    sound_energy,
+    sound_energy_level,
+    sound_exposure,
+    sound_exposure_level,
+    sound_intensity,
+    sound_power_level,
+    sound_pressure_level,
+    time_averaged_sound_intensity,
+    time_averaged_sound_intensity_level,
 )
-
-from acoustics.standards.iso_1996_1_2003 import composite_rating_level
 
 
 def _leq(levels, time):

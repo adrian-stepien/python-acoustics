@@ -2,8 +2,9 @@
 Tests for :class:`Acoustics.Octave.Octave`
 """
 
-from acoustics.octave import Octave
 import numpy as np
+
+from acoustics.octave import Octave
 
 
 class TestOctave:

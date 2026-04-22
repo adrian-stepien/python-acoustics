@@ -1,23 +1,22 @@
+import sys
+
 import numpy as np
+import pytest
 from numpy.testing import assert_almost_equal, assert_array_almost_equal
 
-import pytest
-
+from acoustics.bands import octave, third
 from acoustics.room import (
-    mean_alpha,
-    nrc,
-    t60_sabine,
-    t60_eyring,
-    t60_millington,
-    t60_fitzroy,
-    t60_arau,
-    t60_impulse,
     c50_from_file,
     c80_from_file,
+    mean_alpha,
+    nrc,
+    t60_arau,
+    t60_eyring,
+    t60_fitzroy,
+    t60_impulse,
+    t60_millington,
+    t60_sabine,
 )
-from acoustics.bands import octave, third
-
-import sys
 
 sys.path.append('..')
 from get_data_path import data_path

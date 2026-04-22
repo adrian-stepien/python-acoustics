@@ -1,6 +1,7 @@
-from acoustics.directivity import *
 import numpy as np
 import pytest
+
+from acoustics.directivity import *
 
 
 @pytest.mark.parametrize(

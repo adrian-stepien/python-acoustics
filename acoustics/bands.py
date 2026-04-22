@@ -110,9 +110,7 @@ def third2oct(levels, axis=None):
     levels = np.array(levels)
     axis = axis if axis is not None else levels.ndim - 1
 
-    try:
-        assert levels.shape[axis] % 3 == 0
-    except AssertionError:
+    if levels.shape[axis] % 3 != 0:
         raise ValueError("Wrong shape.")
     shape = list(levels.shape)
     shape[axis] = shape[axis] // 3

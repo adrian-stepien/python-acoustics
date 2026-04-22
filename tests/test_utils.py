@@ -1,7 +1,7 @@
 import numpy as np
-from numpy.testing import assert_almost_equal, assert_array_equal, assert_array_almost_equal
+from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal
 
-from acoustics.utils import esum, _is_1d, mean_tl, wavelength, w
+from acoustics.utils import _is_1d, esum, mean_tl, w, wavelength
 
 
 def test_mean_tl_1d():
