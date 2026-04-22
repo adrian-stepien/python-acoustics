@@ -9,13 +9,14 @@ The following is an example on how to use :class:`acoustics.octave.Octave`.
 .. literalinclude:: ../examples/octave.py
 
 """
+
 import numpy as np
 import acoustics
 
-#REFERENCE = 1000.0
-#"""
-#Reference frequency.
-#"""
+# REFERENCE = 1000.0
+# """
+# Reference frequency.
+# """
 
 from acoustics.standards.iec_61260_1_2014 import index_of_frequency
 from acoustics.standards.iec_61260_1_2014 import REFERENCE_FREQUENCY as REFERENCE
@@ -91,7 +92,7 @@ def upper_frequency(frequency=None, fraction=1, n=None, ref=REFERENCE):
     return acoustics.standards.iec_61260_1_2014.upper_frequency(center, fraction)
 
 
-#-- things below will be deprecated?---#
+# -- things below will be deprecated?---#
 
 frequency_of_band = acoustics.standards.iec_61260_1_2014.exact_center_frequency
 band_of_frequency = index_of_frequency

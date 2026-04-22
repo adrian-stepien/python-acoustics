@@ -8,14 +8,14 @@ import acoustics
 
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE, sound_pressure_level
 from acoustics.standards.iec_61672_1_2013 import WEIGHTING_SYSTEMS
-from acoustics.standards.iec_61672_1_2013 import (NOMINAL_OCTAVE_CENTER_FREQUENCIES,
-                                                  NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES)
+from acoustics.standards.iec_61672_1_2013 import (
+    NOMINAL_OCTAVE_CENTER_FREQUENCIES,
+    NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES,
+)
 
 
 class Signal(np.ndarray):
-    """A signal consisting of samples (array) and a sample frequency (float).
-
-    """
+    """A signal consisting of samples (array) and a sample frequency (float)."""
 
     def __new__(cls, data, fs):
         obj = np.asarray(data).view(cls)
@@ -51,7 +51,7 @@ class Signal(np.ndarray):
         # Get the parent's __reduce__ tuple
         pickled_state = super(Signal, self).__reduce__()
         # Create our own tuple to pass to __setstate__
-        new_state = pickled_state[2] + (self.fs, )
+        new_state = pickled_state[2] + (self.fs,)
         # Return a tuple that replaces the parent's __setstate__ tuple with our own
         return (pickled_state[0], pickled_state[1], new_state)
 
@@ -74,8 +74,7 @@ class Signal(np.ndarray):
 
     @property
     def channels(self):
-        """Amount of channels.
-        """
+        """Amount of channels."""
         if self.ndim > 1:
             return self.shape[-2]
         else:
@@ -83,8 +82,7 @@ class Signal(np.ndarray):
 
     @property
     def duration(self):
-        """Duration of signal in seconds.
-        """
+        """Duration of signal in seconds."""
         return float(self.samples / self.fs)
 
     @property
@@ -151,7 +149,8 @@ class Signal(np.ndarray):
 
         """
         return Signal(
-            acoustics.signal.decimate(x=self, q=factor, n=order, ftype=ftype, zero_phase=zero_phase), self.fs / factor)
+            acoustics.signal.decimate(x=self, q=factor, n=order, ftype=ftype, zero_phase=zero_phase), self.fs / factor
+        )
 
     def resample(self, nsamples, times=None, axis=-1, window=None):
         """Resample signal.
@@ -187,7 +186,7 @@ class Signal(np.ndarray):
         :returns: Amplified signal.
         :rtype: :class:`Signal`
         """
-        factor = 10.0**(decibel / 20.0)
+        factor = 10.0 ** (decibel / 20.0)
         if inplace:
             self *= factor
             return self
@@ -253,7 +252,7 @@ class Signal(np.ndarray):
 
         """
         return acoustics.signal.rms(self)
-        #return np.sqrt(self.power())
+        # return np.sqrt(self.power())
 
     def weigh(self, weighting='A', zero_phase=False):
         """Apply frequency-weighting. By default 'A'-weighting is applied.
@@ -508,7 +507,7 @@ class Signal(np.ndarray):
 
         t, ceps, _ = self.complex_cepstrum(N=N)
         if params['frequency']:
-            t = 1. / t
+            t = 1.0 / t
             params['xlabel'] = params['xlabel_frequency']
             t = t[::-1]
             ceps = ceps[::-1]
@@ -540,13 +539,13 @@ class Signal(np.ndarray):
 
         t, ceps = self.real_cepstrum(N=N)
         if params['frequency']:
-            t = 1. / t
+            t = 1.0 / t
             params['xlabel'] = params['xlabel_frequency']
             t = t[::-1]
             ceps = ceps[::-1]
         return _base_plot(t, ceps, params)
 
-    def plot_power_spectrum(self, N=None, **kwargs):  #filename=None, scale='log'):
+    def plot_power_spectrum(self, N=None, **kwargs):  # filename=None, scale='log'):
         """Plot spectrum of signal.
 
         Valid kwargs:
@@ -675,8 +674,14 @@ class Signal(np.ndarray):
 
         data = np.squeeze(self)
         try:
-            _, _, _, im = ax0.specgram(data, Fs=self.fs, noverlap=params['noverlap'], NFFT=params['NFFT'],
-                                       mode='magnitude', scale_by_freq=False)
+            _, _, _, im = ax0.specgram(
+                data,
+                Fs=self.fs,
+                noverlap=params['noverlap'],
+                NFFT=params['NFFT'],
+                mode='magnitude',
+                scale_by_freq=False,
+            )
         except AttributeError:
             raise NotImplementedError(
                 "Your version of matplotlib is incompatible due to lack of support of the mode keyword argument to matplotlib.mlab.specgram."
@@ -742,14 +747,14 @@ class Signal(np.ndarray):
         L_masked = np.ma.masked_where(np.isinf(L), L)
         return _base_plot(t, L_masked, params)
 
-    #def octave(self, frequency, fraction=1):
-    #"""Determine fractional-octave `fraction` at `frequency`.
+    # def octave(self, frequency, fraction=1):
+    # """Determine fractional-octave `fraction` at `frequency`.
 
-    #.. seealso:: :func:`acoustics.signal.fractional_octaves`
+    # .. seealso:: :func:`acoustics.signal.fractional_octaves`
 
-    #"""
-    #return acoustics.signal.fractional_octaves(self, self.fs, frequency,
-    #frequency, fraction, False)[1]
+    # """
+    # return acoustics.signal.fractional_octaves(self, self.fs, frequency,
+    # frequency, fraction, False)[1]
 
     def bandpass(self, lowcut, highcut, order=8, zero_phase=False):
         """Filter signal with band-pass filter.
@@ -764,8 +769,9 @@ class Signal(np.ndarray):
 
         .. seealso:: :func:`acoustics.signal.bandpass`
         """
-        return type(self)(acoustics.signal.bandpass(self, lowcut, highcut, self.fs, order=order, zero_phase=zero_phase),
-                          self.fs)
+        return type(self)(
+            acoustics.signal.bandpass(self, lowcut, highcut, self.fs, order=order, zero_phase=zero_phase), self.fs
+        )
 
     def bandstop(self, lowcut, highcut, order=8, zero_phase=False):
         """Filter signal with band-stop filter.
@@ -780,8 +786,9 @@ class Signal(np.ndarray):
 
         .. seealso:: :func:`acoustics.signal.bandstop`
         """
-        return type(self)(acoustics.signal.bandstop(self, lowcut, highcut, self.fs, order=order, zero_phase=zero_phase),
-                          self.fs)
+        return type(self)(
+            acoustics.signal.bandstop(self, lowcut, highcut, self.fs, order=order, zero_phase=zero_phase), self.fs
+        )
 
     def highpass(self, cutoff, order=4, zero_phase=False):
         """Filter signal with high-pass filter.
@@ -821,8 +828,10 @@ class Signal(np.ndarray):
 
         .. seealso:: :func:`acoustics.signal.octavepass`
         """
-        return type(self)(acoustics.signal.octavepass(self, center, self.fs, fraction=fraction, order=order,
-                                                      zero_phase=zero_phase), self.fs)
+        return type(self)(
+            acoustics.signal.octavepass(self, center, self.fs, fraction=fraction, order=order, zero_phase=zero_phase),
+            self.fs,
+        )
 
     def bandpass_frequencies(self, frequencies, order=8, purge=True, zero_phase=False):
         """Apply bandpass filters for frequencies.
@@ -836,8 +845,9 @@ class Signal(np.ndarray):
 
         .. seealso:: :func:`acoustics.signal.bandpass_frequencies`
         """
-        frequencies, filtered = acoustics.signal.bandpass_frequencies(self, self.fs, frequencies, order, purge,
-                                                                      zero_phase=zero_phase)
+        frequencies, filtered = acoustics.signal.bandpass_frequencies(
+            self, self.fs, frequencies, order, purge, zero_phase=zero_phase
+        )
         return frequencies, type(self)(filtered, self.fs)
 
     def octaves(self, frequencies=NOMINAL_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True, zero_phase=False):
@@ -852,8 +862,9 @@ class Signal(np.ndarray):
 
         .. seealso:: :func:`acoustics.signal.bandpass_octaves`
         """
-        frequencies, octaves = acoustics.signal.bandpass_octaves(self, self.fs, frequencies, order, purge,
-                                                                 zero_phase=zero_phase)
+        frequencies, octaves = acoustics.signal.bandpass_octaves(
+            self, self.fs, frequencies, order, purge, zero_phase=zero_phase
+        )
         return frequencies, type(self)(octaves, self.fs)
 
     def third_octaves(self, frequencies=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES, order=8, purge=True, zero_phase=False):
@@ -868,8 +879,9 @@ class Signal(np.ndarray):
 
         .. seealso:: :func:`acoustics.signal.bandpass_third_octaves`
         """
-        frequencies, octaves = acoustics.signal.bandpass_third_octaves(self, self.fs, frequencies, order, purge,
-                                                                       zero_phase=zero_phase)
+        frequencies, octaves = acoustics.signal.bandpass_third_octaves(
+            self, self.fs, frequencies, order, purge, zero_phase=zero_phase
+        )
         return frequencies, type(self)(octaves, self.fs)
 
     def fractional_octaves(self, frequencies=None, fraction=1, order=8, purge=True, zero_phase=False):
@@ -886,10 +898,12 @@ class Signal(np.ndarray):
         .. seealso:: :func:`acoustics.signal.bandpass_fractional_octaves`
         """
         if frequencies is None:
-            frequencies = acoustics.signal.OctaveBand(fstart=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES[0],
-                                                      fstop=self.fs / 2.0, fraction=fraction)
-        frequencies, octaves = acoustics.signal.bandpass_fractional_octaves(self, self.fs, frequencies, fraction, order,
-                                                                            purge, zero_phase=zero_phase)
+            frequencies = acoustics.signal.OctaveBand(
+                fstart=NOMINAL_THIRD_OCTAVE_CENTER_FREQUENCIES[0], fstop=self.fs / 2.0, fraction=fraction
+            )
+        frequencies, octaves = acoustics.signal.bandpass_fractional_octaves(
+            self, self.fs, frequencies, fraction, order, purge, zero_phase=zero_phase
+        )
         return frequencies, type(self)(octaves, self.fs)
 
     def plot_octaves(self, **kwargs):
@@ -928,8 +942,7 @@ class Signal(np.ndarray):
         return _base_plot(f.center, o.leq().T, params)
 
     def plot_fractional_octaves(self, frequencies=None, fraction=1, order=8, purge=True, zero_phase=False, **kwargs):
-        """Plot fractional octaves.
-        """
+        """Plot fractional octaves."""
         title = '1/{}-Octaves SPL'.format(fraction)
 
         params = {
@@ -940,8 +953,9 @@ class Signal(np.ndarray):
             'title': title,
         }
         params.update(kwargs)
-        f, o = self.fractional_octaves(frequencies=frequencies, fraction=fraction, order=order, purge=purge,
-                                       zero_phase=zero_phase)
+        f, o = self.fractional_octaves(
+            frequencies=frequencies, fraction=fraction, order=order, purge=purge, zero_phase=zero_phase
+        )
         return _base_plot(f.center, o.leq().T, params)
 
     def plot(self, **kwargs):
@@ -963,61 +977,61 @@ class Signal(np.ndarray):
         params.update(kwargs)
         return _base_plot(self.times(), self, params)
 
-    #def plot_scalo(self, filename=None):
-    #"""
-    #Plot scalogram
-    #"""
-    #from scipy.signal import ricker, cwt
+    # def plot_scalo(self, filename=None):
+    # """
+    # Plot scalogram
+    # """
+    # from scipy.signal import ricker, cwt
 
-    #wavelet = ricker
-    #widths = np.logspace(-1, 3.5, 10)
-    #x = cwt(self, wavelet, widths)
+    # wavelet = ricker
+    # widths = np.logspace(-1, 3.5, 10)
+    # x = cwt(self, wavelet, widths)
 
-    #interpolation = 'nearest'
+    # interpolation = 'nearest'
 
-    #from matplotlib.ticker import LinearLocator, AutoLocator, MaxNLocator
-    #majorLocator = LinearLocator()
-    #majorLocator = MaxNLocator()
+    # from matplotlib.ticker import LinearLocator, AutoLocator, MaxNLocator
+    # majorLocator = LinearLocator()
+    # majorLocator = MaxNLocator()
 
-    #fig = plt.figure()
-    #ax = fig.add_subplot(111)
-    #ax.set_title('Scaleogram')
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # ax.set_title('Scaleogram')
     ##ax.set_xticks(np.arange(0, x.shape[1])*self.fs)
     ##ax.xaxis.set_major_locator(majorLocator)
 
     ##ax.imshow(10.0 * np.log10(x**2.0), interpolation=interpolation, aspect='auto', origin='lower')#, extent=[0, 1, 0, len(x)])
-    #ax.pcolormesh(np.arange(0.0, x.shape[1])/self.fs, widths, 10.0*np.log(x**2.0))
-    #if filename:
-    #fig.savefig(filename)
-    #else:
-    #return fig
+    # ax.pcolormesh(np.arange(0.0, x.shape[1])/self.fs, widths, 10.0*np.log(x**2.0))
+    # if filename:
+    # fig.savefig(filename)
+    # else:
+    # return fig
 
-    #def plot_scaleogram(self, filename):
-    #"""
-    #Plot scaleogram
-    #"""
-    #import pywt
+    # def plot_scaleogram(self, filename):
+    # """
+    # Plot scaleogram
+    # """
+    # import pywt
 
-    #wavelet = 'dmey'
-    #level = pywt.dwt_max_level(len(self), pywt.Wavelet(wavelet))
-    #print level
-    #level = 20
-    #order = 'freq'
-    #interpolation = 'nearest'
+    # wavelet = 'dmey'
+    # level = pywt.dwt_max_level(len(self), pywt.Wavelet(wavelet))
+    # print level
+    # level = 20
+    # order = 'freq'
+    # interpolation = 'nearest'
 
-    #wp = pywt.WaveletPacket(self, wavelet, 'sym', maxlevel=level)
-    #nodes = wp.get_level(level, order=order)
-    #labels = [n.path for n in nodes]
-    #values = np.abs(np.array([n.data for n in nodes], 'd'))
+    # wp = pywt.WaveletPacket(self, wavelet, 'sym', maxlevel=level)
+    # nodes = wp.get_level(level, order=order)
+    # labels = [n.path for n in nodes]
+    # values = np.abs(np.array([n.data for n in nodes], 'd'))
 
-    #fig = plt.figure()
-    #ax = fig.add_subplot(111)
-    #ax.set_title('Scaleogram')
-    #ax.imshow(values, interpolation=interpolation, aspect='auto', origin='lower', extent=[0, 1, 0, len(values)])
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # ax.set_title('Scaleogram')
+    # ax.imshow(values, interpolation=interpolation, aspect='auto', origin='lower', extent=[0, 1, 0, len(values)])
     ##ax.set_yticks(np.arange(0.5, len(labels) + 0.5))
     ##ax.set_yticklabels(labels)
 
-    #fig.savefig(filename)
+    # fig.savefig(filename)
 
     def normalize(self, gap=6.0, inplace=False):
         """Normalize signal.
@@ -1029,7 +1043,7 @@ class Signal(np.ndarray):
         By default a 6 decibel gap is used.
 
         """
-        factor = (np.abs(self).max() * 10.0**(gap/20.0))
+        factor = np.abs(self).max() * 10.0 ** (gap / 20.0)
         if inplace:
             self /= factor[..., None]
             return self

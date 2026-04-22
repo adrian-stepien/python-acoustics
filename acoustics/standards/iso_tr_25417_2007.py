@@ -12,6 +12,7 @@ the principal aim of harmonizing the terminology used [ISO25417]_.
 .. inheritance-diagram:: acoustics.standards.iso_tr_25417_2007
 
 """
+
 import numpy as np
 
 REFERENCE_PRESSURE = 2.0e-5
@@ -87,7 +88,7 @@ def peak_sound_pressure_level(pressure, reference_pressure=REFERENCE_PRESSURE, a
     .. math:: L_{p,peak} = 10.0 \\log \\frac{p_{peak}^2.0}{p_0^2}
 
     """
-    return 10.0 * np.log10(peak_sound_pressure(pressure, axis=axis)**2.0 / reference_pressure**2.0)
+    return 10.0 * np.log10(peak_sound_pressure(pressure, axis=axis) ** 2.0 / reference_pressure**2.0)
 
 
 REFERENCE_SOUND_EXPOSURE = 4.0e-10
@@ -206,8 +207,9 @@ def time_averaged_sound_intensity(intensity, axis=-1):
     return intensity.mean(axis=axis)
 
 
-def time_averaged_sound_intensity_level(time_averaged_sound_intensity, reference_intensity=REFERENCE_INTENSITY,
-                                        axis=-1):
+def time_averaged_sound_intensity_level(
+    time_averaged_sound_intensity, reference_intensity=REFERENCE_INTENSITY, axis=-1
+):
     """
     Time-averaged sound intensity level :math:`L_{I,T}`.
 
@@ -233,8 +235,9 @@ def normal_time_averaged_sound_intensity(time_averaged_sound_intensity, unit_nor
     return time_averaged_sound_intensity.dot(unit_normal_vector)
 
 
-def normal_time_averaged_sound_intensity_level(normal_time_averaged_sound_intensity,
-                                               reference_intensity=REFERENCE_INTENSITY):
+def normal_time_averaged_sound_intensity_level(
+    normal_time_averaged_sound_intensity, reference_intensity=REFERENCE_INTENSITY
+):
     """
     Normal time-averaged sound intensity level :math:`L_{In,T}` in dB.
 
