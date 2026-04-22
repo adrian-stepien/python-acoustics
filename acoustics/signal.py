@@ -1143,9 +1143,7 @@ def _sosfiltfilt(sos, x, axis=-1, padtype='odd', padlen=None, method='pad', irle
     """
     from scipy.signal import sosfilt_zi
 
-    # Private SciPy helpers — no public equivalents exist as of SciPy 1.15. If a
-    # future SciPy bump moves or removes these, vendor them in-tree.
-    from scipy.signal._arraytools import (  # noqa: PLC2701
+    from acoustics._arraytools import (
         axis_reverse,
         axis_slice,
         const_ext,
