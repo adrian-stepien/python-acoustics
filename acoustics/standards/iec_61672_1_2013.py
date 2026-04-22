@@ -11,23 +11,6 @@ kinds of sound measuring instruments [IEC61672]_:
 
 .. [IEC61672] http://webstore.iec.ch/webstore/webstore.nsf/artnum/048669!opendocument
 
-Weighting functions
-*******************
-
-.. autofunction:: weighting_function_a
-.. autofunction:: weighting_function_c
-.. autofunction:: weighting_function_z
-
-
-Weighting systems
-*****************
-
-.. autofunction:: weighting_system_a
-.. autofunction:: weighting_system_c
-.. autofunction:: weighting_system_z
-
-
-
 """
 
 import io

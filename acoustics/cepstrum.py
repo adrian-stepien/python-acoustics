@@ -10,7 +10,7 @@ __all__ = ['complex_cepstrum', 'real_cepstrum', 'inverse_complex_cepstrum', 'min
 
 
 def complex_cepstrum(x, n=None):
-    r"""Compute the complex cepstrum of a real sequence.
+    r"""Compute the complex cepstrum of a real sequence [CC1]_.
 
     Parameters
     ----------
@@ -29,10 +29,10 @@ def complex_cepstrum(x, n=None):
 
     The complex cepstrum is given by
 
-    .. math:: c[n] = F^{-1}\\left{\\log_{10}{\\left(F{x[n]}\\right)}\\right}
+    .. math:: c[n] = F^{-1}\\left\\{\\log_{10}{\\left(F\\{x[n]\\}\\right)}\\right\\}
 
-    where :math:`x_[n]` is the input signal and :math:`F` and :math:`F_{-1}
-    are respectively the forward and backward Fourier transform.
+    where :math:`x[n]` is the input signal and :math:`F` and :math:`F^{-1}`
+    are respectively the forward and backward Fourier transform [CC2]_ [CC3]_.
 
     See Also
     --------
@@ -74,11 +74,11 @@ def complex_cepstrum(x, n=None):
 
     References
     ----------
-    .. [1] Wikipedia, "Cepstrum".
+    .. [CC1] Wikipedia, "Cepstrum".
            http://en.wikipedia.org/wiki/Cepstrum
-    .. [2] M.P. Norton and D.G. Karczub, D.G.,
+    .. [CC2] M.P. Norton and D.G. Karczub, D.G.,
            "Fundamentals of Noise and Vibration Analysis for Engineers", 2003.
-    .. [3] B. P. Bogert, M. J. R. Healy, and J. W. Tukey:
+    .. [CC3] B. P. Bogert, M. J. R. Healy, and J. W. Tukey:
            "The Quefrency Analysis of Time Series for Echoes: Cepstrum, Pseudo
            Autocovariance, Cross-Cepstrum and Saphe Cracking".
            Proceedings of the Symposium on Time Series Analysis
@@ -105,7 +105,7 @@ def complex_cepstrum(x, n=None):
 
 
 def real_cepstrum(x, n=None):
-    r"""Compute the real cepstrum of a real sequence.
+    r"""Compute the real cepstrum of a real sequence [RC1]_.
 
     x : ndarray
         Real sequence to compute real cepstrum of.
@@ -119,9 +119,9 @@ def real_cepstrum(x, n=None):
 
     The real cepstrum is given by
 
-    .. math:: c[n] = F^{-1}\left{\log_{10}{\left|F{x[n]}\right|}\right}
+    .. math:: c[n] = F^{-1}\left\{\log_{10}{\left|F\{x[n]\}\right|}\right\}
 
-    where :math:`x_[n]` is the input signal and :math:`F` and :math:`F_{-1}
+    where :math:`x[n]` is the input signal and :math:`F` and :math:`F^{-1}`
     are respectively the forward and backward Fourier transform. Note that
     contrary to the complex cepstrum the magnitude is taken of the spectrum.
 
@@ -138,7 +138,7 @@ def real_cepstrum(x, n=None):
 
     References
     ----------
-    .. [1] Wikipedia, "Cepstrum".
+    .. [RC1] Wikipedia, "Cepstrum".
            http://en.wikipedia.org/wiki/Cepstrum
 
     """
@@ -149,7 +149,7 @@ def real_cepstrum(x, n=None):
 
 
 def inverse_complex_cepstrum(ceps, ndelay):
-    r"""Compute the inverse complex cepstrum of a real sequence.
+    r"""Compute the inverse complex cepstrum of a real sequence [ICC1]_.
 
     ceps : ndarray
         Real sequence to compute inverse complex cepstrum of.
@@ -163,9 +163,9 @@ def inverse_complex_cepstrum(ceps, ndelay):
 
     The inverse complex cepstrum is given by
 
-    .. math:: x[n] = F^{-1}\left{\exp(F(c[n]))\right}
+    .. math:: x[n] = F^{-1}\left\{\exp(F(c[n]))\right\}
 
-    where :math:`c_[n]` is the input signal and :math:`F` and :math:`F_{-1}
+    where :math:`c[n]` is the input signal and :math:`F` and :math:`F^{-1}`
     are respectively the forward and backward Fourier transform.
 
     See Also
@@ -188,7 +188,7 @@ def inverse_complex_cepstrum(ceps, ndelay):
 
     References
     ----------
-    .. [1] Wikipedia, "Cepstrum".
+    .. [ICC1] Wikipedia, "Cepstrum".
            http://en.wikipedia.org/wiki/Cepstrum
 
     """
@@ -207,7 +207,7 @@ def inverse_complex_cepstrum(ceps, ndelay):
 
 
 def minimum_phase(x, n=None):
-    r"""Compute the minimum phase reconstruction of a real sequence.
+    r"""Compute the minimum phase reconstruction of a real sequence [MP1]_.
 
     x : ndarray
         Real sequence to compute the minimum phase reconstruction of.
@@ -233,7 +233,7 @@ def minimum_phase(x, n=None):
 
     References
     ----------
-    .. [1] Soo-Chang Pei, Huei-Shan Lin. Minimum-Phase FIR Filter Design Using
+    .. [MP1] Soo-Chang Pei, Huei-Shan Lin. Minimum-Phase FIR Filter Design Using
            Real Cepstrum. IEEE TRANSACTIONS ON CIRCUITS AND SYSTEMS-II:
            EXPRESS BRIEFS, VOL. 53, NO. 10, OCTOBER 2006
 
