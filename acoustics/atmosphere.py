@@ -20,15 +20,6 @@ class Atmosphere:
     Class describing atmospheric conditions.
     """
 
-    REF_TEMP = 293.15
-    """Reference temperature"""
-
-    REF_PRESSURE = 101.325
-    """International Standard Atmosphere in kilopascal"""
-
-    TRIPLE_TEMP = 273.16
-    """Triple point isotherm temperature."""
-
     def __init__(
         self,
         temperature: float = REFERENCE_TEMPERATURE,
