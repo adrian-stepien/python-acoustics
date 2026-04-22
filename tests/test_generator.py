@@ -8,7 +8,7 @@ class Test_noise():
     """
     Test :func:`acoustics.generator.noise`.
     """
-    parameters = [
+    CASES = [
         ('white', +3.0, 0.0),
         ('pink', 0.0, -3.0),
         ('blue', +6.0, +3.0),
@@ -23,7 +23,15 @@ class Test_noise():
     inclination. On other cases the error is mostly < 0.1
     """
 
-    @pytest.fixture(params=parameters)
+    COLOR_SEEDS = {
+        'white': 0,
+        'pink': 1,
+        'blue': 2,
+        'brown': 3,
+        'violet': 4,
+    }
+
+    @pytest.fixture(params=CASES)
     def parameters(self, request):
         return request.param
 
@@ -43,20 +51,26 @@ class Test_noise():
     def samples(self, request):
         return request.param
 
-    def test_length(self, color, samples):
+    @pytest.fixture
+    def state(self, color, samples):
+        # Use deterministic random input so the octave-slope assertions are stable across CI runs.
+        seed = samples + self.COLOR_SEEDS[color]
+        return np.random.RandomState(seed)
 
-        assert (len(noise(samples, color)) == samples)
+    def test_length(self, color, samples, state):
 
-    def test_power(self, color, samples, power_change):
+        assert (len(noise(samples, color, state=state)) == samples)
+
+    def test_power(self, color, samples, power_change, state):
 
         fs = 48000
-        _, L = octaves(noise(samples, color), fs)
+        _, L = octaves(noise(samples, color, state=state), fs)
         change = np.diff(L).mean()
         assert (np.abs(change - power_change) < self.ERROR)
 
-    def test_power_density(self, color, samples, power_density_change):
+    def test_power_density(self, color, samples, power_density_change, state):
 
         fs = 48000
-        _, L = octaves(noise(samples, color), fs, density=True)
+        _, L = octaves(noise(samples, color, state=state), fs, density=True)
         change = np.diff(L).mean()
         assert (np.abs(change - power_density_change) < self.ERROR)
