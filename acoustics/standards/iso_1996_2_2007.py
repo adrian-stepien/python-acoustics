@@ -116,8 +116,8 @@ def masking_noise_lines(levels, line_classifier, center, bandwidth, regression_r
 def tonal_audibility(tones_level, masking_noise_level, center):
     r"""Tonal audibility.
 
-    :param tones_level: Total sound pressure level of the tones in the critical band :math:`L_{pt}.
-    :param masking_noise_level: Total sound pressure level of the masking noise in the critical band :math:`L_{pn}.
+    :param tones_level: Total sound pressure level of the tones in the critical band :math:`L_{pt}`.
+    :param masking_noise_level: Total sound pressure level of the masking noise in the critical band :math:`L_{pn}`.
     :param center: Center frequency of the critical band :math:`f_c`.
     :returns: Tonal audibility :math:`\Delta L_{ta}`
 
@@ -653,7 +653,7 @@ def noise_pause_seeker(levels, tsc):
     :param df: Frequency resolution.
     :param tsc: Tone seeking criterium.
 
-    Possible start and end indices of noise pauses are determined using :func:`possible_noise_pauses.
+    Possible start and end indices of noise pauses are determined using :func:`possible_noise_pauses`.
     Then, only those that correspond to the smallest intervals that do not overlap other intervals are kept.
     """
     n = len(levels)

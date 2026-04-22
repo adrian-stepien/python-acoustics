@@ -3,33 +3,8 @@ Atmosphere
 ==========
 
 The atmosphere module contains functions and classes related to atmospheric
-acoustics and is based on :mod:`acoustics.standards.iso_9613_1_1993`.
-
-Atmosphere class
-****************
-
-.. autoclass:: acoustics.atmosphere.Atmosphere
-
-From ISO 9613-1 1993
-********************
-
-Constants
----------
-
-.. autoattribute:: acoustics.standards.iso_9613_1_1993.SOUNDSPEED
-.. autoattribute:: acoustics.standards.iso_9613_1_1993.REFERENCE_TEMPERATURE
-.. autoattribute:: acoustics.standards.iso_9613_1_1993.REFERENCE_PRESSURE
-.. autoattribute:: acoustics.standards.iso_9613_1_1993.TRIPLE_TEMPERATURE
-
-Functions
----------
-
-.. autofunction:: acoustics.standards.iso_9613_1_1993.soundspeed
-.. autofunction:: acoustics.standards.iso_9613_1_1993.saturation_pressure
-.. autofunction:: acoustics.standards.iso_9613_1_1993.molar_concentration_water_vapour
-.. autofunction:: acoustics.standards.iso_9613_1_1993.relaxation_frequency_nitrogen
-.. autofunction:: acoustics.standards.iso_9613_1_1993.relaxation_frequency_oxygen
-.. autofunction:: acoustics.standards.iso_9613_1_1993.attenuation_coefficient
+acoustics. Constants and functions from ISO 9613-1:1993 are re-exported
+from :mod:`acoustics.standards.iso_9613_1_1993`.
 
 """
 

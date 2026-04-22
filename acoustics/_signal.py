@@ -641,6 +641,7 @@ class Signal(np.ndarray):
         * xlim
         * ylim
         * clim
+
         .. note:: This method only works for a single channel.
 
         """
