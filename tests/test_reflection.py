@@ -2,6 +2,7 @@
 
 import numpy as np
 import pytest
+from matplotlib import pyplot as plt
 
 from acoustics.reflection import (
     Boundary,
@@ -130,3 +131,97 @@ class TestBoundary:
         b = Boundary(frequency=freqs, flow_resistivity=200_000.0, angle=angles)
         R = b.reflection_factor
         assert R.shape == (len(angles), len(freqs))
+
+    def test_reflection_factor_spherical_shape(self):
+        freqs = np.array([100.0, 500.0, 1000.0])
+        angles = np.array([0.0, np.pi / 4])
+        b = Boundary(
+            frequency=freqs,
+            flow_resistivity=200_000.0,
+            angle=angles,
+            distance=2.0,
+            reflection_model='spherical',
+        )
+        R = b.reflection_factor
+        assert R.shape == (len(angles), len(freqs))
+
+    def test_invalid_reflection_model_raises(self):
+        b = Boundary(frequency=1000.0, flow_resistivity=200_000.0, angle=0.0, reflection_model='bogus')
+        with pytest.raises(RuntimeError, match="Oops"):
+            _ = b.reflection_factor
+
+    def test_plot_impedance_returns_figure(self):
+        b = Boundary(frequency=np.array([100.0, 500.0, 1000.0]), flow_resistivity=200_000.0)
+        fig = b.plot_impedance()
+        try:
+            assert len(fig.axes) == 2
+            assert fig.axes[0].get_title() == "Magnitude of impedance"
+            assert fig.axes[1].get_title() == "Angle of impedance"
+        finally:
+            plt.close(fig)
+
+    def test_plot_impedance_writes_file(self, tmp_path):
+        filename = tmp_path / "impedance.png"
+        b = Boundary(frequency=np.array([100.0, 500.0, 1000.0]), flow_resistivity=200_000.0)
+        fig = b.plot_impedance(filename)
+        try:
+            assert filename.exists()
+        finally:
+            plt.close(fig)
+
+    def test_plot_reflection_factor_requires_frequency(self):
+        b = Boundary(frequency=None, flow_resistivity=200_000.0, angle=0.0)
+        with pytest.raises(ValueError, match="No frequency specified"):
+            b.plot_reflection_factor()
+
+    def test_plot_reflection_factor_requires_angle(self):
+        b = Boundary(frequency=1000.0, flow_resistivity=200_000.0)
+        with pytest.raises(ValueError, match="No angle specified"):
+            b.plot_reflection_factor()
+
+    def test_plot_reflection_factor_requires_vector_input(self):
+        b = Boundary(frequency=1000.0, flow_resistivity=200_000.0, angle=0.0)
+        with pytest.raises(ValueError, match="Either frequency or angle needs to be a vector"):
+            b.plot_reflection_factor()
+
+    def test_plot_reflection_factor_over_frequency(self):
+        b = Boundary(frequency=np.array([100.0, 500.0, 1000.0]), flow_resistivity=200_000.0, angle=0.0)
+        fig = b.plot_reflection_factor()
+        try:
+            assert len(fig.axes) == 2
+            assert fig.axes[0].get_xlabel() == r"$f$ in Hz"
+            assert len(fig.axes[0].lines) == 1
+        finally:
+            plt.close(fig)
+
+    def test_plot_reflection_factor_over_angle(self):
+        b = Boundary(frequency=1000.0, flow_resistivity=200_000.0, angle=np.array([0.0, np.pi / 4]))
+        fig = b.plot_reflection_factor()
+        try:
+            assert len(fig.axes) == 2
+            assert fig.axes[0].get_xlabel() == r"$\theta$ in degrees"
+            assert len(fig.axes[0].lines) == 1
+        finally:
+            plt.close(fig)
+
+    def test_plot_reflection_factor_grid(self):
+        b = Boundary(
+            frequency=np.array([100.0, 500.0, 1000.0]),
+            flow_resistivity=200_000.0,
+            angle=np.array([0.0, np.pi / 4]),
+        )
+        fig = b.plot_reflection_factor()
+        try:
+            assert len(fig.axes) == 2
+            assert fig.axes[0].get_title() == "Magnitude of reflection factor"
+            assert fig.axes[0].collections
+        finally:
+            plt.close(fig)
+
+    def test_plot_reflection_factor_writes_file(self, tmp_path):
+        filename = tmp_path / "reflection.png"
+        b = Boundary(frequency=np.array([100.0, 500.0, 1000.0]), flow_resistivity=200_000.0, angle=0.0)
+        fig = b.plot_reflection_factor(filename)
+        assert fig is None
+        assert filename.exists()
+        plt.close("all")
