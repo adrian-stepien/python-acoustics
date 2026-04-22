@@ -4,32 +4,38 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "acoustics"
-version = "0.2.6"
+version = "0.3.0"
 authors = [
-  { name="Python Acoustics" },
+    { name = "Python Acoustics contributors" },
+]
+maintainers = [
+    { name = "Adrian Stepien" },
 ]
 description = "Acoustics module for Python."
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "numpy >= 1.8",
-    "scipy >= 0.16",
-    "matplotlib",
-    "six >= 1.4.1",
-    "pandas >= 0.15",
-    "tabulate",
-    "soundfile",
+    "numpy >= 1.22",
+    "scipy >= 1.8",
+    "matplotlib >= 3.5",
+    "pandas >= 1.4",
+    "tabulate >= 0.9",
+    "soundfile >= 0.12.1",
 ]
 [project.optional-dependencies]
 documentation = [
     "sphinx"
 ]
 fast_fft = [
-    "pyFFTW"
+    "pyFFTW >= 0.13"
 ]
 [project.license]
 file = "LICENSE"

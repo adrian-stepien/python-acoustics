@@ -50,7 +50,7 @@ let
 
 in buildPythonPackage rec {
   pname = "acoustics";
-  version = "0.2.6";
+  version = "0.3.0";
   format = "pyproject";
 
   src = "${sdist}/${pname}*";
