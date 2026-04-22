@@ -23,16 +23,16 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "numpy >= 1.22, < 2.4",
-    "scipy >= 1.8, < 1.16",
-    "matplotlib >= 3.5",
-    "pandas >= 1.4",
-    "tabulate >= 0.9",
-    "soundfile >= 0.12.1",
+    "numpy >= 2.0, < 3.0",
+    "scipy >= 1.15, < 2.0",
+    "matplotlib >= 3.8",
+    "pandas >= 2.2",
+    "tabulate >= 0.10",
+    "soundfile >= 0.13.1",
 ]
 [project.optional-dependencies]
 fast_fft = [
-    "pyFFTW >= 0.13"
+    "pyFFTW >= 0.15"
 ]
 [project.license]
 file = "LICENSE"

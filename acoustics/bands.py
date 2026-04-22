@@ -129,14 +129,14 @@ def _check_band_type(freqs):
     third_oct_bands = third(12.5, 20000)
 
     def _check_sort(freqs, bands):
-        index = np.where(np.in1d(bands, freqs))[0]
+        index = np.where(np.isin(bands, freqs))[0]
         band_pos = index - index[0]
         return (band_pos == np.arange(band_pos.size)).all()
 
-    if np.in1d(freqs, octave_bands).all():
+    if np.isin(freqs, octave_bands).all():
         is_sorted = _check_sort(freqs, octave_bands)
         band_type = "octave" if is_sorted else "octave-unsorted"
-    elif np.in1d(freqs, third_oct_bands).all():
+    elif np.isin(freqs, third_oct_bands).all():
         is_sorted = _check_sort(freqs, third_oct_bands)
         band_type = "third" if is_sorted else "third-unsorted"
     else:

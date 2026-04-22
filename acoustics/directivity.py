@@ -18,7 +18,7 @@ from matplotlib.colors import Normalize
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 from scipy.interpolate import interp2d as interpolate
-from scipy.special import sph_harm  # pylint: disable=no-name-in-module
+from scipy.special import sph_harm_y  # pylint: disable=no-name-in-module
 
 
 def cardioid(theta, a=1.0, k=1.0):
@@ -47,10 +47,10 @@ def spherical_harmonic(theta, phi, m=0, n=0):
 
     .. note:: The degree `n` is often denoted `l`.
 
-    .. seealso:: :func:`scipy.special.sph_harm`
+    .. seealso:: :func:`scipy.special.sph_harm_y`
 
     """
-    return sph_harm(m, n, phi, theta).real
+    return sph_harm_y(n, m, theta, phi).real
 
 
 def spherical_to_cartesian(r, theta, phi):

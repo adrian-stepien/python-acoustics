@@ -37,8 +37,8 @@ class Signal(np.ndarray):
         else:
             return array
 
-    def __array_wrap__(self, out_arr, context=None):
-        return np.ndarray.__array_wrap__(self, out_arr, context)
+    def __array_wrap__(self, out_arr, context=None, return_scalar=False):
+        return np.ndarray.__array_wrap__(self, out_arr, context, return_scalar)
 
     def __array_finalize__(self, obj):
         # see InfoArray.__array_finalize__ for comments

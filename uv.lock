@@ -61,13 +61,13 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "matplotlib", specifier = ">=3.5" },
-    { name = "numpy", specifier = ">=1.22,<2.4" },
-    { name = "pandas", specifier = ">=1.4" },
-    { name = "pyfftw", marker = "extra == 'fast-fft'", specifier = ">=0.13" },
-    { name = "scipy", specifier = ">=1.8,<1.16" },
-    { name = "soundfile", specifier = ">=0.12.1" },
-    { name = "tabulate", specifier = ">=0.9" },
+    { name = "matplotlib", specifier = ">=3.8" },
+    { name = "numpy", specifier = ">=2.0,<3.0" },
+    { name = "pandas", specifier = ">=2.2" },
+    { name = "pyfftw", marker = "extra == 'fast-fft'", specifier = ">=0.15" },
+    { name = "scipy", specifier = ">=1.15,<2.0" },
+    { name = "soundfile", specifier = ">=0.13.1" },
+    { name = "tabulate", specifier = ">=0.10" },
 ]
 provides-extras = ["fast-fft"]
 
