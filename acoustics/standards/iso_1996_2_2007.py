@@ -149,7 +149,7 @@ class Tonality:
     Objective method for assessing the audibility of tones in noise.
     """
 
-    def __init__(  # pylint: disable=too-many-instance-attributes
+    def __init__(
         self,
         signal,
         sample_frequency,
@@ -566,7 +566,7 @@ def create_critical_band(
 
 
 class CriticalBand:
-    def __init__(  # pylint: disable=too-many-instance-attributes
+    def __init__(
         self,
         center,
         start,

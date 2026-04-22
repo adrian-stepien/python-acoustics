@@ -7,7 +7,7 @@ The reflection module contains functions for calculating reflection factors and 
 
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.special import erfc  # pylint: disable=no-name-in-module
+from scipy.special import erfc
 
 SPECIFIC_HEAT_RATIO = 1.4
 r"""Specific heat ratio of air :math:`\gamma`."""
@@ -24,7 +24,7 @@ class Boundary:
     An object describing a boundary.
     """
 
-    def __init__(  # pylint: disable=too-many-instance-attributes
+    def __init__(
         self,
         frequency,
         flow_resistivity,
