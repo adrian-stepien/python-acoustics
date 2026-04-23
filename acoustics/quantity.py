@@ -118,7 +118,7 @@ def get_quantity(name):
     except KeyError as err:
         raise ValueError("Unknown quantity. Quantity is not yet specified.") from err
     try:
-        unit_args = units[name]
+        unit_args = units[q[1]]
     except KeyError as err:
         raise RuntimeError("Unknown unit. Quantity has been specified but unit has not.") from err
 
