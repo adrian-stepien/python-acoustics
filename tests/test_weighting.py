@@ -260,7 +260,3 @@ def test_c2a():
         ]
     )
     assert_array_almost_equal(real, generated)
-
-
-def teardown_module(weighting):
-    pass

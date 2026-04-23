@@ -65,7 +65,7 @@ def test_octave_high(octave_real):
 
 def test_octave_low(octave_real):
     generated = octave_low(16, 16000)
-    real = real = octave_real / np.sqrt(2)
+    real = octave_real / np.sqrt(2)
     assert_array_almost_equal(generated, real)
 
 
