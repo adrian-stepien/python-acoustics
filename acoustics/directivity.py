@@ -122,8 +122,10 @@ class Directivity:
         :param r: norm
         :param theta: angle :math:`\\theta`
         :param phi: angle :math:`\\phi`
+
+        Rotation is currently ignored. ``include_rotation`` is kept for API
+        compatibility until rotation support is implemented.
         """
-        # TODO: Correct for rotation!!!!
         del r, include_rotation
         return self._directivity(theta, phi)
 
@@ -134,8 +136,10 @@ class Directivity:
         :param x: x
         :param y: y
         :param z: z
+
+        Rotation is currently ignored. ``include_rotation`` is kept for API
+        compatibility until rotation support is implemented.
         """
-        # TODO: Correct for rotation!!!!
         del include_rotation
         return self.using_spherical(*cartesian_to_spherical(x, y, z))
 
@@ -147,9 +151,10 @@ class Directivity:
         :param include_rotation: Apply the rotation to the directivity.
             By default the rotation is applied in this figure.
         """
-        # TODO: filename
-        del filename
-        return plot(self, include_rotation)
+        fig = plot(self, include_rotation)
+        if filename:
+            fig.savefig(filename)
+        return fig
 
 
 class Omni(Directivity):

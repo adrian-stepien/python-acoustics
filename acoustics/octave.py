@@ -92,8 +92,7 @@ def upper_frequency(frequency=None, fraction=1, n=None, ref=REFERENCE):
     return acoustics.standards.iec_61260_1_2014.upper_frequency(center, fraction)
 
 
-# -- things below will be deprecated?---#
-
+# Backward-compatible aliases for the IEC 61260 helpers.
 frequency_of_band = acoustics.standards.iec_61260_1_2014.exact_center_frequency
 band_of_frequency = index_of_frequency
 
@@ -258,5 +257,5 @@ __all__ = [
     'index_of_frequency',
     'Octave',
     'frequency_of_band',
-    'band_of_frequency',  # These three will be deprecated?
+    'band_of_frequency',
 ]
