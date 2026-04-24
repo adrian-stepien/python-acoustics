@@ -92,8 +92,7 @@ def upper_frequency(frequency=None, fraction=1, n=None, ref=REFERENCE):
     return acoustics.standards.iec_61260_1_2014.upper_frequency(center, fraction)
 
 
-# -- things below will be deprecated?---#
-
+# Backward-compatible aliases for the IEC 61260 helpers.
 frequency_of_band = acoustics.standards.iec_61260_1_2014.exact_center_frequency
 band_of_frequency = index_of_frequency
 
@@ -104,7 +103,6 @@ class Octave:
     """
 
     def __init__(self, fraction=1, interval=None, fmin=None, fmax=None, unique=False, reference=REFERENCE):
-
         self.reference = reference
         """
         Reference center frequency :math:`f_{c,0}`.
@@ -116,9 +114,9 @@ class Octave:
         """
 
         if (interval is not None) and (fmin is not None or fmax is not None):
-            raise AttributeError
+            raise ValueError("Specify either interval or fmin/fmax, not both.")
 
-        self._interval = np.asarray(interval)
+        self._interval = self._coerce_interval(interval)
         """Interval"""
 
         self._fmin = fmin
@@ -130,39 +128,48 @@ class Octave:
         self.unique = unique
         """Whether or not to calculate the requested values for every value of ``interval``."""
 
+    @staticmethod
+    def _coerce_interval(interval):
+        """Convert an interval input to an array while preserving an unset state."""
+        if interval is None:
+            return None
+        return np.asarray(interval)
+
     @property
     def fmin(self):
         """Minimum frequency of an interval."""
         if self._fmin is not None:
             return self._fmin
-        elif self._interval is not None:
+        if self._interval is not None:
             return self.interval.min()
-        else:
-            raise ValueError("Incorrect fmin/interval")
+        raise ValueError("fmin is undefined; set interval or fmin first.")
 
     @fmin.setter
     def fmin(self, x):
+        if x is None:
+            self._fmin = None
+            return
         if self.interval is not None:
-            pass  # Warning, remove interval first.
-        else:
-            self._fmin = x
+            raise ValueError("Cannot set fmin while interval is set; clear interval first.")
+        self._fmin = x
 
     @property
     def fmax(self):
         """Maximum frequency of an interval."""
         if self._fmax is not None:
             return self._fmax
-        elif self._interval is not None:
+        if self._interval is not None:
             return self.interval.max()
-        else:
-            raise ValueError("Incorrect fmax/interval")
+        raise ValueError("fmax is undefined; set interval or fmax first.")
 
     @fmax.setter
     def fmax(self, x):
+        if x is None:
+            self._fmax = None
+            return
         if self.interval is not None:
-            pass
-        else:
-            self._fmax = x
+            raise ValueError("Cannot set fmax while interval is set; clear interval first.")
+        self._fmax = x
 
     @property
     def interval(self):
@@ -171,10 +178,12 @@ class Octave:
 
     @interval.setter
     def interval(self, x):
-        if self._fmin or self._fmax:
-            pass
-        else:
-            self._interval = np.asarray(x)
+        if x is None:
+            self._interval = None
+            return
+        if self._fmin is not None or self._fmax is not None:
+            raise ValueError("Cannot set interval while fmin or fmax is set; clear them first.")
+        self._interval = self._coerce_interval(x)
 
     def _n(self, f):
         """
@@ -258,5 +267,5 @@ __all__ = [
     'index_of_frequency',
     'Octave',
     'frequency_of_band',
-    'band_of_frequency',  # These three will be deprecated?
+    'band_of_frequency',
 ]

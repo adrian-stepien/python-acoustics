@@ -35,7 +35,3 @@ def test_plot_third_octave_kHz():
 
 def test_plot_band_oct():
     plot_bands(tl_oct, octaves, axes=None, band_type='octave')
-
-
-def teardown_module(imaging):
-    pass

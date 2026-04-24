@@ -20,24 +20,15 @@ class Atmosphere:
     Class describing atmospheric conditions.
     """
 
-    REF_TEMP = 293.15
-    """Reference temperature"""
-
-    REF_PRESSURE = 101.325
-    """International Standard Atmosphere in kilopascal"""
-
-    TRIPLE_TEMP = 273.16
-    """Triple point isotherm temperature."""
-
     def __init__(
         self,
-        temperature=REFERENCE_TEMPERATURE,
-        pressure=REFERENCE_PRESSURE,
-        relative_humidity=0.0,
-        reference_temperature=REFERENCE_TEMPERATURE,
-        reference_pressure=REFERENCE_PRESSURE,
-        triple_temperature=TRIPLE_TEMPERATURE,
-    ):
+        temperature: float = REFERENCE_TEMPERATURE,
+        pressure: float = REFERENCE_PRESSURE,
+        relative_humidity: float = 0.0,
+        reference_temperature: float = REFERENCE_TEMPERATURE,
+        reference_pressure: float = REFERENCE_PRESSURE,
+        triple_temperature: float = TRIPLE_TEMPERATURE,
+    ) -> None:
         """
 
         :param temperature: Temperature in kelvin
@@ -84,7 +75,8 @@ class Atmosphere:
             "reference_pressure",
             "triple_temperature",
         ]
-        return "({})".format(", ".join(map(lambda attr: f"{attr}={getattr(self, attr)}", attributes)))
+        body = ", ".join(f"{attr}={getattr(self, attr)}" for attr in attributes)
+        return f"({body})"
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ == other.__class__

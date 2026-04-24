@@ -198,7 +198,7 @@ class Boundary:
         plt.tight_layout()
 
         if filename:
-            fig.savefig(filename, transparant=True)
+            fig.savefig(filename, transparent=True)
         return fig
 
     def plot_reflection_factor(self, filename=None):
@@ -228,19 +228,25 @@ class Boundary:
                 xlabel = r"$\theta$ in degrees"
             elif n_f > 1 and n_a == 1:  # Show R as function of frequency for a single angle.
                 xlabel = r"$f$ in Hz"
-            R = self.reflection_factor
+            R = np.squeeze(self.reflection_factor)
+            if n_f == 1 and n_a > 1:
+                x = self.angle * 180.0 / np.pi
+                plot_name = "plot"
+            else:
+                x = self.frequency
+                plot_name = "semilogx"
             fig = plt.figure()
 
             ax0 = fig.add_subplot(211)
             ax0.set_title("Magnitude of reflection factor")
-            ax0.semilogx(self.frequency, np.abs(R))
+            getattr(ax0, plot_name)(x, np.abs(R))
             ax0.set_xlabel(xlabel)
             ax0.set_ylabel(r'$\left|R\right|$')
             ax0.grid()
 
             ax1 = fig.add_subplot(212)
             ax1.set_title("Phase of reflection factor")
-            ax1.semilogx(self.frequency, np.angle(R))
+            getattr(ax1, plot_name)(x, np.angle(R))
             ax1.set_xlabel(xlabel)
             ax1.set_ylabel(r'$\angle R$')
             ax1.grid()
@@ -274,7 +280,7 @@ class Boundary:
         # plt.tight_layout()
 
         if filename:
-            fig.savefig(filename, transparant=True)
+            fig.savefig(filename, transparent=True)
         else:
             return fig
 

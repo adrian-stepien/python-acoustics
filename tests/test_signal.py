@@ -225,22 +225,6 @@ def test_amplitude_envelope(amplitude, frequency, fs):
     assert amplitude == amplitude_determined
 
 
-# def test_instantaneous_frequency(amplitude, frequency, fs):
-
-# duration = 5.0
-# samples = int(fs*duration)
-# t = np.arange(samples) / fs
-
-# signal = amplitude * np.sin(2.0*np.pi*frequency*t)
-
-# out = instantaneous_frequency(signal, fs)
-## Rounding is necessary. We take the first element because occasionally
-## there is also a zero.
-# frequency_determined = np.unique(np.round(out), 0)
-
-# assert( frequency == frequency_determined )
-
-
 @pytest.mark.parametrize("channels", [1, 2, 5])
 def test_bandpass(channels):
     fs = 88200

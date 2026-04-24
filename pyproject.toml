@@ -49,6 +49,9 @@ test = [
 lint = [
     "ruff >= 0.4",
 ]
+type = [
+    "basedpyright >= 1.29",
+]
 docs = [
     "sphinx >= 8.0",
 ]
@@ -58,6 +61,7 @@ build = [
 dev = [
     { include-group = "test" },
     { include-group = "lint" },
+    { include-group = "type" },
     { include-group = "docs" },
     { include-group = "build" },
 ]
@@ -76,6 +80,7 @@ norecursedirs = [
 addopts = [
     "--cov=acoustics",
     "--cov-report=term-missing",
+    "--cov-report=xml",
 ]
 
 [tool.coverage.run]
@@ -131,3 +136,21 @@ ignore = [
 
 [tool.ruff.format]
 quote-style = "preserve"
+
+[tool.basedpyright]
+pythonVersion = "3.10"
+typeCheckingMode = "basic"
+include = [
+    "acoustics/bands.py",
+    "acoustics/decibel.py",
+    "acoustics/power.py",
+    "acoustics/quantity.py",
+]
+exclude = [
+    ".venv",
+    "docs/_build",
+]
+reportMissingTypeStubs = false
+reportUnknownArgumentType = false
+reportUnknownMemberType = false
+reportUnknownVariableType = false

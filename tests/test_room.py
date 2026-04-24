@@ -29,40 +29,31 @@ def setup_module(room):
     room.volume = 3000
 
 
-def test_t60_sabine():
-    calculated = t60_sabine(surfaces, alpha, volume)
-    real = 1.211382149
-    assert_almost_equal(calculated, real)
+@pytest.mark.parametrize(
+    "alpha_kind,expected",
+    [("scalar", 1.211382149), ("bands", np.full(4, 1.211382149))],
+)
+def test_t60_sabine(alpha_kind, expected):
+    a = alpha if alpha_kind == "scalar" else alpha_bands
+    assert_array_almost_equal(t60_sabine(surfaces, a, volume), expected)
 
 
-def test_t60_sabine_bands():
-    calculated = t60_sabine(surfaces, alpha_bands, volume)
-    real = np.array([1.211382149, 1.211382149, 1.211382149, 1.211382149])
-    assert_array_almost_equal(calculated, real)
+@pytest.mark.parametrize(
+    "alpha_kind,expected",
+    [("scalar", 1.020427763), ("bands", np.full(4, 1.020427763))],
+)
+def test_t60_eyring(alpha_kind, expected):
+    a = alpha if alpha_kind == "scalar" else alpha_bands
+    assert_array_almost_equal(t60_eyring(surfaces, a, volume), expected)
 
 
-def test_t60_eyring():
-    calculated = t60_eyring(surfaces, alpha, volume)
-    real = 1.020427763
-    assert_almost_equal(calculated, real)
-
-
-def test_t60_eyring_bands():
-    calculated = t60_eyring(surfaces, alpha_bands, volume)
-    real = np.array([1.020427763, 1.020427763, 1.020427763, 1.020427763])
-    assert_array_almost_equal(calculated, real)
-
-
-def test_t60_millington():
-    calculated = t60_millington(surfaces, alpha, volume)
-    real = 1.020427763
-    assert_almost_equal(calculated, real)
-
-
-def test_t60_millington_bands():
-    calculated = t60_millington(surfaces, alpha_bands, volume)
-    real = np.array([1.020427763, 1.020427763, 1.020427763, 1.020427763])
-    assert_array_almost_equal(calculated, real)
+@pytest.mark.parametrize(
+    "alpha_kind,expected",
+    [("scalar", 1.020427763), ("bands", np.full(4, 1.020427763))],
+)
+def test_t60_millington(alpha_kind, expected):
+    a = alpha if alpha_kind == "scalar" else alpha_bands
+    assert_array_almost_equal(t60_millington(surfaces, a, volume), expected)
 
 
 def test_t60_fitzroy():
@@ -83,22 +74,14 @@ def test_t60_fitzroy_bands():
     assert_array_almost_equal(calculated, real)
 
 
-def test_t60_arau():
-    Sx = surfaces[0]
-    Sy = surfaces[1]
-    Sz = surfaces[2]
-    calculated = t60_arau(Sx, Sy, Sz, alpha, volume)
-    real = 1.142442931
-    assert_almost_equal(calculated, real)
-
-
-def test_t60_arau_bands():
-    Sx = surfaces[0]
-    Sy = surfaces[1]
-    Sz = surfaces[2]
-    calculated = t60_arau(Sx, Sy, Sz, alpha_bands, volume)
-    real = np.array([1.142442931, 1.142442931, 1.142442931, 1.142442931])
-    assert_array_almost_equal(calculated, real)
+@pytest.mark.parametrize(
+    "alpha_kind,expected",
+    [("scalar", 1.142442931), ("bands", np.full(4, 1.142442931))],
+)
+def test_t60_arau(alpha_kind, expected):
+    Sx, Sy, Sz = surfaces[0], surfaces[1], surfaces[2]
+    a = alpha if alpha_kind == "scalar" else alpha_bands
+    assert_array_almost_equal(t60_arau(Sx, Sy, Sz, a, volume), expected)
 
 
 def test_mean_alpha_float():
@@ -373,7 +356,3 @@ def test_c50_from_file(file_name, bands, expected):
 def test_c80_from_file(file_name, bands, expected):
     calculated = c80_from_file(file_name, bands)
     assert_array_almost_equal(calculated, expected, decimal=0)
-
-
-def teardown_module(room):
-    pass

@@ -1,6 +1,6 @@
 DOCS = docs
 
-.PHONY: sync test tests lint format format-check docs build sdist clean release
+.PHONY: sync test tests coverage lint lint-fix format format-check typecheck docs build sdist clean release
 
 sync:
 	uv sync --all-groups
@@ -10,8 +10,14 @@ test:
 
 tests: test
 
+coverage:
+	uv run pytest --cov-report=html
+
 lint:
 	uv run ruff check .
+
+lint-fix:
+	uv run ruff check --fix .
 
 format:
 	uv run ruff format .
@@ -19,8 +25,11 @@ format:
 format-check:
 	uv run ruff format --check .
 
+typecheck:
+	uv run basedpyright
+
 docs:
-	uv run sphinx-build -b html $(DOCS) $(DOCS)/_build/html
+	uv run sphinx-build -W --keep-going -b html $(DOCS) $(DOCS)/_build/html
 
 build:
 	uv build

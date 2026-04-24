@@ -6,16 +6,21 @@ The Quantity module provides two classes to work with quantities and units.
 
 """
 
+from typing import TypeAlias
+
 from acoustics.standards.iso_tr_25417_2007 import REFERENCE_PRESSURE
 
-quantities = {
+UnitSpec: TypeAlias = tuple[str, str, str]
+QuantitySpec: TypeAlias = tuple[str, str, bool, str | None, str | None, float]
+
+quantities: dict[str, QuantitySpec] = {
     'pressure': ('Pressure', 'pascal', True, 'p', '$p$', REFERENCE_PRESSURE),
 }
 """
 Dictionary with quantities. Each quantity is stored as a tuple.
 """
 
-units = {
+units: dict[str, UnitSpec] = {
     'meter': ('meter', 'm', '$m$'),
     'pascal': ('pascal', 'Pa', '$Pa$'),
 }
@@ -114,14 +119,12 @@ def get_quantity(name):
 
     """
     try:
-        q = list(quantities[name])
+        quantity_name, unit_name, dynamic, symbol, symbol_latex, reference = quantities[name]
     except KeyError as err:
         raise ValueError("Unknown quantity. Quantity is not yet specified.") from err
     try:
-        unit_args = units[name]
+        unit_args = units[unit_name]
     except KeyError as err:
         raise RuntimeError("Unknown unit. Quantity has been specified but unit has not.") from err
 
-    q[1] = Unit(*unit_args)
-
-    return Quantity(*q)
+    return Quantity(quantity_name, Unit(*unit_args), dynamic, symbol, symbol_latex, reference)

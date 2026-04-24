@@ -449,8 +449,14 @@ class OctaveBand(Frequencies):
     """Fractional-octave band spectrum."""
 
     def __init__(
-        self, center=None, fstart=None, fstop=None, nbands=None, fraction=1, reference=acoustics.octave.REFERENCE
-    ):
+        self,
+        center: np.ndarray | float | None = None,
+        fstart: float | None = None,
+        fstop: float | None = None,
+        nbands: int | None = None,
+        fraction: int = 1,
+        reference: float = acoustics.octave.REFERENCE,
+    ) -> None:
 
         if center is not None:
             try:
@@ -889,7 +895,7 @@ class Filterbank:
 
     """
 
-    def __init__(self, frequencies, sample_frequency=44100, order=8):
+    def __init__(self, frequencies: "Frequencies", sample_frequency: float = 44100, order: int = 8) -> None:
 
         self.frequencies = frequencies
         """
@@ -1137,9 +1143,7 @@ def _sosfiltfilt(sos, x, axis=-1, padtype='odd', padlen=None, method='pad', irle
     """
     from scipy.signal import sosfilt_zi
 
-    # Private SciPy helpers — no public equivalents exist as of SciPy 1.15. If a
-    # future SciPy bump moves or removes these, vendor them in-tree.
-    from scipy.signal._arraytools import (  # noqa: PLC2701
+    from acoustics._arraytools import (
         axis_reverse,
         axis_slice,
         const_ext,

@@ -34,15 +34,20 @@ The main checks are:
 ```bash
 uv run ruff check .
 uv run ruff format --check .
+uv run basedpyright
 uv run pytest
 ```
+
+Pytest writes terminal coverage and `coverage.xml` by default. CI also uploads
+downloadable HTML coverage reports for each Python version. For a local HTML
+coverage report, run `make coverage`.
 
 ## Documentation
 
 Documentation sources live in the `docs` folder. Build them locally with:
 
 ```bash
-uv run sphinx-build -b html docs docs/_build/html
+make docs
 ```
 
 ## Nix

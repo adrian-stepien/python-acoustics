@@ -81,13 +81,17 @@ def cartesian_to_spherical(x, y, z):
 
     .. math:: r = \\sqrt{\\left( x^2 + y^2 + z^2 \\right)}
     .. math:: \\theta = \\arccos{\\frac{z}{r}}
-    .. math:: \\phi = \\arccos{\\frac{y}{x}}
+    .. math:: \\phi = \\operatorname{atan2}(y, x)
     """
     x = np.asanyarray(x)
     y = np.asanyarray(y)
     z = np.asanyarray(z)
     r = np.linalg.norm(np.vstack((x, y, z)), axis=0)
-    return r, np.arccos(z / r), np.arctan(y / x)
+    theta = np.zeros_like(r, dtype=float)
+    np.divide(z, r, out=theta, where=r != 0.0)
+    theta = np.arccos(np.clip(theta, -1.0, 1.0))
+    phi = np.mod(np.arctan2(y, x), 2.0 * np.pi)
+    return r, theta, phi
 
 
 class Directivity:
@@ -98,8 +102,13 @@ class Directivity:
     """
 
     def __init__(self, rotation=None):
+        if rotation is None:
+            rotation = np.zeros(3, dtype=float)
+        rotation = np.asarray(rotation, dtype=float)
+        if rotation.shape != (3,):
+            raise ValueError("rotation must be a three-element vector of X, Y, Z angles.")
 
-        self.rotation = rotation if rotation else np.array([1.0, 0.0, 0.0])  # X, Y, Z rotation
+        self.rotation = rotation
         """
         Rotation of the directivity pattern.
         """
@@ -112,19 +121,51 @@ class Directivity:
 
     def _undo_rotation(self, theta, phi):
         """
-        Undo rotation.
+        Undo the configured rotation before sampling the base pattern.
         """
+        x, y, z = spherical_to_cartesian(1.0, theta, phi)
+        points = np.stack((x, y, z), axis=0)
+        shape = points.shape[1:]
+        rotated = self._rotation_matrix().T @ points.reshape(3, -1)
+        _, theta, phi = cartesian_to_spherical(
+            rotated[0].reshape(shape),
+            rotated[1].reshape(shape),
+            rotated[2].reshape(shape),
+        )
+        return theta, phi
 
-    def using_spherical(self, r, theta, phi, include_rotation=True):
+    def _rotation_matrix(self):
+        """Return the rotation matrix for the configured X, Y, Z Euler angles."""
+        rx, ry, rz = self.rotation
+
+        cx, sx = np.cos(rx), np.sin(rx)
+        cy, sy = np.cos(ry), np.sin(ry)
+        cz, sz = np.cos(rz), np.sin(rz)
+
+        rot_x = np.array([[1.0, 0.0, 0.0], [0.0, cx, -sx], [0.0, sx, cx]])
+        rot_y = np.array([[cy, 0.0, sy], [0.0, 1.0, 0.0], [-sy, 0.0, cy]])
+        rot_z = np.array([[cz, -sz, 0.0], [sz, cz, 0.0], [0.0, 0.0, 1.0]])
+        return rot_z @ rot_y @ rot_x
+
+    def using_spherical(self, r=None, theta=None, phi=None, include_rotation=True):
         """
         Return the directivity for given spherical coordinates.
 
-        :param r: norm
-        :param theta: angle :math:`\\theta`
+        Accepts either ``(theta, phi)`` or ``(r, theta, phi)``.
+
+        :param r: norm or angle :math:`\\theta`
+        :param theta: angle :math:`\\theta` or :math:`\\phi`
         :param phi: angle :math:`\\phi`
+        :param include_rotation: Apply the configured rotation before sampling.
         """
-        # TODO: Correct for rotation!!!!
-        del r, include_rotation
+        if phi is None:
+            if r is None or theta is None:
+                raise TypeError("using_spherical() requires theta and phi coordinates.")
+            theta, phi = r, theta
+
+        if include_rotation and np.any(self.rotation):
+            theta, phi = self._undo_rotation(theta, phi)
+
         return self._directivity(theta, phi)
 
     def using_cartesian(self, x, y, z, include_rotation=True):
@@ -134,22 +175,23 @@ class Directivity:
         :param x: x
         :param y: y
         :param z: z
-        """
-        # TODO: Correct for rotation!!!!
-        del include_rotation
-        return self.using_spherical(*cartesian_to_spherical(x, y, z))
 
-    def plot(self, filename=None, include_rotation=True):
+        """
+        _, theta, phi = cartesian_to_spherical(x, y, z)
+        return self.using_spherical(theta, phi, include_rotation=include_rotation)
+
+    def plot(self, filename=None, include_rotation=True, sphere=False):
         """
         Directivity plot. Plot to ``filename`` when given.
 
         :param filename: Filename
         :param include_rotation: Apply the rotation to the directivity.
-            By default the rotation is applied in this figure.
+        :param sphere: Plot the directivity on the surface of a unit sphere.
         """
-        # TODO: filename
-        del filename
-        return plot(self, include_rotation)
+        fig = plot(self, include_rotation=include_rotation, sphere=sphere)
+        if filename:
+            fig.savefig(filename)
+        return fig
 
 
 class Omni(Directivity):
@@ -207,10 +249,11 @@ class Custom(Directivity):
     A class to work with directivity.
     """
 
-    def __init__(self, theta=None, phi=None, r=None):
+    def __init__(self, theta=None, phi=None, r=None, rotation=None):
         """
         Constructor.
         """
+        super().__init__(rotation=rotation)
 
         self.theta = theta
         """
@@ -239,7 +282,7 @@ class Custom(Directivity):
         return rgi((grid_theta, grid_phi))
 
 
-def plot(d, sphere=False):
+def plot(d, sphere=False, include_rotation=True):
     """
     Plot directivity `d`.
 
@@ -251,7 +294,7 @@ def plot(d, sphere=False):
     theta, phi = np.meshgrid(np.linspace(0.0, np.pi, 50), np.linspace(0.0, +2.0 * np.pi, 50))
 
     # Directivity strength. Real-valued. Can be positive and negative.
-    dr = d.using_spherical(theta, phi)
+    dr = d.using_spherical(theta, phi, include_rotation=include_rotation)
 
     if sphere:
         x, y, z = spherical_to_cartesian(1.0, theta, phi)
